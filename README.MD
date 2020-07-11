@@ -1,5 +1,25 @@
-# To register the bot with Twitch
-    1. create a new twitch account (optional but the bot's name will be whatever account is used to register it)
+# Bot Framework Twitch Adapter
+
+The TwitchAdapter is a C# component which allows you to add Twitch as an endpoint for a bots built with the [Microsoft Bot Framework SDK](https://github.com/Microsoft/botframework-sdk). 
+All Twitch integration is achieved through the [Twitch IRC interface](https://dev.twitch.tv/docs/irc). The C# API support for the IRC interface is provided by the [TwitchLib Client](https://github.com/TwitchLib).
+
+# Project Structure
+**NegativeEddy.Bots.Twitch** - contains the Twitch adapter
+
+**NegativeEddy.Bots.Twitch.AspNetCore** - contains support for ASP.NET Core integration
+
+**NegativeEddy.Bots.Twitch.AspNetHost** - an ASP.NET Core sample which hosts the bot as a background service
+
+**NegativeEddy.Bots.Twitch.BlazorHost** - an ASP.NET Core sample which hosts the bot as a background service along side a server side Blazor app. The Blazor app has a simple UI that allows some configuration of the TwitchAdapter
+
+**NegativeEddy.Bots.Twitch.ConsoleHost** - a .NET Core Console sample which hosts the bot. The console accepts a few commands to configure the TwitchAdapter
+
+
+# Requirements
+To register a bot with Twitch
+
+    1. create a twitch account for the bot's identity
+       - make note of the account's ID
     2. enable 2-factor auth (required to manage twitch apps)
     3. create an auth token at https://twitchapps.com/
         - make note of the token
@@ -19,14 +39,20 @@ AppSettings fields required
 ```
 
 ## Usage in an ASP.NET app
-Register your bot as an IBot inteface and call the AddTwitchBotAdapter() extension method.
+As part of the services configuration
+ 1. register your bot as an IBot inteface 
+ 2. call the AddTwitchBotAdapter() extension method with a populated TwitchAdapterSettings object.
  
 ```
 public void ConfigureServices(IServiceCollection services)
 {
     ...
     services.AddScoped<IBot, TwitchBot>(); 
+ 
+    var twitchSettings = new TwitchAdapterSettings();
+    Configuration.GetSection("twitchBot").Bind(twitchSettings);
     services.AddTwitchBotAdapter(Configuration);
+    ...
 }
 ```
 
