@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>d893fbab-541c-47dc-9579-e405bc45795a</UserSecretsId>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NegativeEddy.Bots.Twitch.AspNetHost\NegativeEddy.Bots.Twitch.AspNetHost.csproj" />
+    <ProjectReference Include="..\NegativeEddy.Bots.Twitch\NegativeEddy.Bots.Twitch.csproj" />
+  </ItemGroup>
+
+</Project>

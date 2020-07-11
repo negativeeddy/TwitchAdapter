@@ -1,0 +1,35 @@
+﻿@page "/channels"
+@inject TwitchAdapter adapter
+
+<h1>Current Bot Channels</h1>
+
+<div style="display:table">
+    @foreach (var channel in adapter.JoinedChannels)
+    {
+        <div style="display:table-row; padding:15px">
+            <div style="display:table-cell; text-align:left; padding:inherit">@channel.Channel</div>
+            <div style="display:table-cell; padding:inherit"><button class="btn btn-primary" @onclick="() => LeaveChannel(channel.Channel)">Leave</button></div>
+        </div>
+    }
+</div>
+<hr />
+<input type="text" @bind-value="joinChannelName" />
+<button class="btn btn-primary" @onclick="JoinChannel">Join</button>
+
+@code {
+    private string? joinChannelName { get; set; }
+
+    private void JoinChannel()
+    {
+        if (!string.IsNullOrEmpty(joinChannelName))
+        {
+            adapter.JoinChannel(joinChannelName);
+        }
+    }
+
+    private void LeaveChannel(string channelName)
+    {
+        adapter.LeaveChannel(channelName);
+        StateHasChanged();
+    }
+}
