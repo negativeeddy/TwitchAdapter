@@ -2,6 +2,7 @@
 using Microsoft.Bot.Schema;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -28,9 +29,9 @@ namespace NegativeEddy.Bots.Twitch
 
         public TwitchAdapter(IServiceProvider services, TwitchAdapterSettings settings)
         {
-            _services = services;
+            _services = services ?? throw new ArgumentNullException(nameof(services));
             var loggerFactory = services.GetRequiredService<ILoggerFactory>();
-            _logger = loggerFactory.CreateLogger<TwitchAdapter>();
+            _logger = (ILogger)loggerFactory.CreateLogger<TwitchAdapter>() ?? NullLogger.Instance;
             _botId = settings?.UserId ?? throw new ArgumentNullException("UserId");
 
             string token = settings.OAuthToken ?? throw new ArgumentNullException("OAuthToken");
