@@ -5,6 +5,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>d893fbab-541c-47dc-9579-e405bc45795a</UserSecretsId>
     <Nullable>enable</Nullable>
+    <Version>1.0.0-preview1</Version>
   </PropertyGroup>
 
   <ItemGroup>
