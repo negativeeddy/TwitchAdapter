@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -45,84 +46,80 @@ namespace NegativeEddy.Bots.Twitch
 
             var customClient = new WebSocketClient(clientOptions);
             _client = new TwitchClient(customClient, logger: loggerFactory.CreateLogger<TwitchClient>());
-            _client.Initialize(credentials, _botId);
             _client.OnJoinedChannel += async (s, e) => await ProcessBotJoinedChannelAsync(e.BotUsername, e.Channel);
             _client.OnMessageReceived += async (s, e) => await ProcessChatMessageAsync(e.ChatMessage);
             _client.OnWhisperReceived += async (s, e) => await ProcessWhisperAsync(e.WhisperMessage);
+            _client.OnUserJoined += async (s, e) => await ProcessUserJoined(e.Channel, e.Username);
+            _client.OnUserLeft += async (s, e) => await ProcessUserLeft(e.Channel, e.Username);
             _client.OnConnected += (s, e) => _logger.LogInformation($"Connected to {e.AutoJoinChannel}");
+
+            _client.Initialize(credentials, _botId);
         }
 
-        public void Connect()
+        private Activity CreateBaseActivity(string channel, bool isGroup = true, TwitchConversation conversationType = TwitchConversation.Channel)
         {
-            _client.Connect();
+            return new Activity()
+            {
+                ChannelId = "Twitch",
+                Conversation = new ConversationAccount(id: channel + "|Twitch", isGroup: isGroup, conversationType: conversationType.ToString(), tenantId: channel),
+                Timestamp = DateTime.UtcNow,
+                Id = Guid.NewGuid().ToString(),
+                Recipient = new ChannelAccount(id: _botId, name: _botId),
+            };
         }
 
-        public void JoinChannel(string channel)
+        private async Task ProcessUserLeft(string channel, string username)
         {
-            _client.JoinChannel(channel);
+            var activity = CreateBaseActivity(channel);
+            activity.Type = ActivityTypes.ConversationUpdate;
+            activity.MembersRemoved = new[] { new ChannelAccount(id: username, name: username) };
+
+            await ProcessActivityAsync(activity);
         }
 
-        public void LeaveChannel(string channel)
+        private async Task ProcessUserJoined(string channel, string username)
         {
-            _client.LeaveChannel(channel);
-        }
+            var activity = CreateBaseActivity(channel);
+            activity.Type = ActivityTypes.ConversationUpdate;
+            activity.MembersAdded = new[] { new ChannelAccount(id: username, name: username) };
 
-        public IReadOnlyList<JoinedChannel> JoinedChannels => _client.JoinedChannels;
+            await ProcessActivityAsync(activity);
+        }
 
         private async Task ProcessBotJoinedChannelAsync(string botUsername, string channel)
         {
-            var activity = new Activity()
-            {
-                ChannelId = "Twitch",
-                Conversation = new ConversationAccount(id: channel + "|Twitch", isGroup: true, conversationType: "channel", tenantId: channel),
-                Timestamp = DateTime.UtcNow,
-                Id = Guid.NewGuid().ToString(),
-                Type = ActivityTypes.ConversationUpdate,
-                MembersAdded = new[] { new ChannelAccount(id: _botId, name: botUsername) }
-            };
+            Debug.Assert(_botId == botUsername);
+
+            var activity = CreateBaseActivity(channel);
+            activity.Type = ActivityTypes.ConversationUpdate;
+            activity.MembersAdded = new[] { new ChannelAccount(id: _botId, name: botUsername) };
 
             await ProcessActivityAsync(activity);
         }
 
         private async Task ProcessChatMessageAsync(ChatMessage message)
         {
-            var activity = new Activity()
-            {
-                Text = message.Message,
-                ChannelId = "Twitch",
-                From = new ChannelAccount(id: message.UserId, name: message.Username),
-                Recipient = new ChannelAccount(id: _botId, name: message.BotUsername),
-                Conversation = new ConversationAccount(id: message.Channel + "|Twitch", isGroup: true, conversationType: "channel", tenantId: message.Channel),
-                Timestamp = DateTime.UtcNow,
-                Id = Guid.NewGuid().ToString(),
-                Type = ActivityTypes.Message,
-                ChannelData = System.Text.Json.JsonSerializer.Serialize(message)
-            };
+            var activity = CreateBaseActivity(message.Channel);
+            activity.Text = message.Message;
+            activity.From = new ChannelAccount(id: message.UserId, name: message.Username);
+            activity.Type = ActivityTypes.Message;
+            activity.ChannelData = System.Text.Json.JsonSerializer.Serialize(message);
 
             await ProcessActivityAsync(activity);
         }
+
 
         private async Task ProcessWhisperAsync(WhisperMessage whisper)
         {
-            var activity = new Activity()
-            {
-                Text = whisper.Message,
-                ChannelId = "Twitch",
-                From = new ChannelAccount(id: whisper.UserId, name: whisper.Username),
-                Recipient = new ChannelAccount(id: _botId, name: whisper.BotUsername),
-                Conversation = new ConversationAccount(id: "TwitchWhisper", isGroup: false, conversationType: "whisper"),
-                Timestamp = DateTime.UtcNow,
-                Id = Guid.NewGuid().ToString(),
-                Type = ActivityTypes.Message,
-                ChannelData = System.Text.Json.JsonSerializer.Serialize(whisper)
-            };
+            var activity = CreateBaseActivity(channel: whisper.Username, isGroup: false, conversationType: TwitchConversation.Whisper);
+            activity.Text = whisper.Message;
+            activity.From = new ChannelAccount(id: whisper.UserId, name: whisper.Username);
+
+            // override the default conversation
+            activity.Type = ActivityTypes.Message;
+            activity.ChannelData = System.Text.Json.JsonSerializer.Serialize(whisper);
 
             await ProcessActivityAsync(activity);
-        }
-
-        private void Client_OnLog(object sender, OnLogArgs e)
-        {
-            _logger.LogInformation("({User}) {Message}", e.BotUsername, e.Data);
         }
 
         public async Task ProcessActivityAsync(Activity activity)
@@ -184,7 +181,7 @@ namespace NegativeEddy.Bots.Twitch
                             }
                             else
                             {
-                                if (activity.Conversation.ConversationType == "channel")
+                                if (activity.Conversation.ConversationType == TwitchConversationString.Channel)
                                 {
                                     _client.SendMessage(twitchChannel, message.Text);
                                 }
@@ -232,6 +229,24 @@ namespace NegativeEddy.Bots.Twitch
         {
             throw new NotImplementedException();
         }
+
+        public void Connect()
+        {
+            _client.Connect();
+        }
+
+        public void JoinChannel(string channel)
+        {
+            _client.JoinChannel(channel);
+        }
+
+        public void LeaveChannel(string channel)
+        {
+            _client.LeaveChannel(channel);
+        }
+
+        public IReadOnlyList<JoinedChannel> JoinedChannels => _client.JoinedChannels;
+
 
         public void Dispose()
         {

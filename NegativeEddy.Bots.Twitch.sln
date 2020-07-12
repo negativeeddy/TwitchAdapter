@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NegativeEddy.Bots.Twitch.Co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NegativeEddy.Bots.Twitch.BlazorHost", "NegativeEddy.Bots.Twitch.BlazorHost\NegativeEddy.Bots.Twitch.BlazorHost.csproj", "{06565DFC-22BF-4043-8F8E-D638EF15807E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NegativeEddy.Bots.Twitch.AspNetCore", "NegativeEddy.Bots.Twitch.AspNetCore\NegativeEddy.Bots.Twitch.AspNetCore.csproj", "{927AE3A9-2A96-4A1A-B672-6A9F1B1B47FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NegativeEddy.Bots.Twitch.AspNetCore", "NegativeEddy.Bots.Twitch.AspNetCore\NegativeEddy.Bots.Twitch.AspNetCore.csproj", "{927AE3A9-2A96-4A1A-B672-6A9F1B1B47FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NegativeEddy.Bots.Twitch.SampleBot", "NegativeEddy.Bots.Twitch.SampleBot\NegativeEddy.Bots.Twitch.SampleBot.csproj", "{88AA5CE4-4915-44E5-87F1-4469DD23BCA5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{927AE3A9-2A96-4A1A-B672-6A9F1B1B47FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{927AE3A9-2A96-4A1A-B672-6A9F1B1B47FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{927AE3A9-2A96-4A1A-B672-6A9F1B1B47FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88AA5CE4-4915-44E5-87F1-4469DD23BCA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88AA5CE4-4915-44E5-87F1-4469DD23BCA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88AA5CE4-4915-44E5-87F1-4469DD23BCA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88AA5CE4-4915-44E5-87F1-4469DD23BCA5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

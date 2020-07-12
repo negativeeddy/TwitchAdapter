@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NegativeEddy.Bots.Twitch.AspNetHost\NegativeEddy.Bots.Twitch.AspNetHost.csproj" />
+    <ProjectReference Include="..\NegativeEddy.Bots.Twitch.SampleBot\NegativeEddy.Bots.Twitch.SampleBot.csproj" />
     <ProjectReference Include="..\NegativeEddy.Bots.Twitch\NegativeEddy.Bots.Twitch.csproj" />
   </ItemGroup>
 
