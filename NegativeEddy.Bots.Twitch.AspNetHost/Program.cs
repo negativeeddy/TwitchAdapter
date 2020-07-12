@@ -28,7 +28,7 @@ namespace NegativeEddy.Bots.Twitch.AspNetHost
             return Host.CreateDefaultBuilder(args)
                        .ConfigureServices((hostContext, services) =>
                        {
-                           services.AddScoped<IBot, TwitchBot>()
+                           services.AddTransient<IBot, TwitchBot>()
                            .AddTwitchBotAdapter(twitchSettings);
                        });
         }

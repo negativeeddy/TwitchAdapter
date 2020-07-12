@@ -75,8 +75,8 @@ namespace NegativeEddy.Bots.Twitch.ConsoleHost
                 loggin.AddConsole();
                 loggin.AddDebug();
             })
-            .AddScoped<IBot, TwitchBot>()
-            .AddScoped<TwitchAdapter>(sp => new TwitchAdapter(sp, twitchSettings));
+            .AddTransient<IBot, TwitchBot>()
+            .AddSingleton<TwitchAdapter>(sp => new TwitchAdapter(sp, twitchSettings));
 
             services.AddHttpClient("ShoutoutCommand", c =>
             {

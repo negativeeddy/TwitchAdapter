@@ -24,7 +24,7 @@ namespace NegativeEddy.Bots.Twitch.BlazorHost
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddScoped<IBot, TwitchBot>();
+            services.AddTransient<IBot, TwitchBot>();
 
             var twitchSettings = new TwitchAdapterSettings();
             Configuration.GetSection("twitchBot").Bind(twitchSettings);

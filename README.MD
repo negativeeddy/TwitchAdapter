@@ -47,11 +47,11 @@ As part of the services configuration
 public void ConfigureServices(IServiceCollection services)
 {
     ...
-    services.AddScoped<IBot, TwitchBot>(); 
+    services.AddTransient<IBot, TwitchBot>(); 
  
     var twitchSettings = new TwitchAdapterSettings();
     Configuration.GetSection("twitchBot").Bind(twitchSettings);
-    services.AddTwitchBotAdapter(Configuration);
+    services.AddTwitchBotAdapter(twitchSettings);
     ...
 }
 ```

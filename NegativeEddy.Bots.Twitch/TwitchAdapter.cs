@@ -132,9 +132,7 @@ namespace NegativeEddy.Bots.Twitch
                 return;
             }
 
-            using var scope = _services.CreateScope();
-            var bot = scope.ServiceProvider.GetRequiredService<IBot>();
-
+            var bot = _services.GetRequiredService<IBot>();
             using var context = new TurnContext(this, activity);
 
             await this.RunPipelineAsync(
