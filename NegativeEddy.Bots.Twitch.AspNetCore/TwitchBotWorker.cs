@@ -25,8 +25,7 @@ namespace NegativeEddy.Bots.Twitch.AspNetCore
         {
             _logger.LogInformation("starting");
 
-            using var scope = Services.CreateScope();
-            Adapter = scope.ServiceProvider.GetRequiredService<TwitchAdapter>();
+            Adapter = Services.GetRequiredService<TwitchAdapter>();
 
             Adapter.OnTurnError += (ctx, e) =>
             {

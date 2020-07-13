@@ -22,7 +22,7 @@ namespace NegativeEddy.Bots.Twitch
             {
                 if (member.Id != turnContext.Activity.Recipient.Id)
                 {
-                    await turnContext.SendActivityAsync($"See ya later {member.Name}!", cancellationToken: cancellationToken);
+                    await turnContext.SendActivityAsync($"See ya later @{member.Name}!", cancellationToken: cancellationToken);
                 }
             }
         }
@@ -33,7 +33,7 @@ namespace NegativeEddy.Bots.Twitch
             {
                 if (member.Id != turnContext.Activity.Recipient.Id)
                 {
-                    await turnContext.SendActivityAsync($"Hi there - {member.Name}. Welcome to the channel", cancellationToken: cancellationToken);
+                    await turnContext.SendActivityAsync($"Hi there - @{member.Name}. Welcome to the channel", cancellationToken: cancellationToken);
                 }
             }
         }
@@ -47,7 +47,7 @@ namespace NegativeEddy.Bots.Twitch
             if (didBotWelcomeUser.DidBotWelcomeUser == false)
             {
                 didBotWelcomeUser.DidBotWelcomeUser = true;
-                await turnContext.SendActivityAsync($"Hi {userName}, welcome to the channel!", cancellationToken: cancellationToken);
+                await turnContext.SendActivityAsync($"Hi @{userName}, welcome to the channel!", cancellationToken: cancellationToken);
             }
             else
             {
@@ -56,7 +56,7 @@ namespace NegativeEddy.Bots.Twitch
                 {
                     case "hello":
                     case "hi":
-                        await turnContext.SendActivityAsync($"Hi again, {userName}!", cancellationToken: cancellationToken);
+                        await turnContext.SendActivityAsync($"Hi again, @{userName}!", cancellationToken: cancellationToken);
                         break;
                     case "!intro":
                     case "!help":

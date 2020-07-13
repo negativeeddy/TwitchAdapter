@@ -3,7 +3,6 @@ using Microsoft.Bot.Schema;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,7 +10,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TwitchLib.Client;
-using TwitchLib.Client.Events;
+using TwitchLib.Client.Enums;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Clients;
 using TwitchLib.Communication.Models;
@@ -27,6 +26,7 @@ namespace NegativeEddy.Bots.Twitch
         private readonly IServiceProvider _services;
         private readonly ILogger _logger;
         private readonly string _botId;
+        private readonly string[] _initialChannels;
 
         public TwitchAdapter(IServiceProvider services, TwitchAdapterSettings settings)
         {
@@ -45,7 +45,7 @@ namespace NegativeEddy.Bots.Twitch
             };
 
             var customClient = new WebSocketClient(clientOptions);
-            _client = new TwitchClient(customClient, logger: loggerFactory.CreateLogger<TwitchClient>());
+            _client = new TwitchClient(customClient, ClientProtocol.WebSocket, loggerFactory.CreateLogger<TwitchClient>());
             _client.OnJoinedChannel += async (s, e) => await ProcessBotJoinedChannelAsync(e.BotUsername, e.Channel);
             _client.OnMessageReceived += async (s, e) => await ProcessChatMessageAsync(e.ChatMessage);
             _client.OnWhisperReceived += async (s, e) => await ProcessWhisperAsync(e.WhisperMessage);
@@ -53,7 +53,9 @@ namespace NegativeEddy.Bots.Twitch
             _client.OnUserLeft += async (s, e) => await ProcessUserLeft(e.Channel, e.Username);
             _client.OnConnected += (s, e) => _logger.LogInformation($"Connected to {e.AutoJoinChannel}");
 
-            _client.Initialize(credentials, _botId);
+            _client.Initialize(credentials);
+
+            _initialChannels = (string[])settings.InitialChannels.Clone();
         }
 
         private Activity CreateBaseActivity(string channel, bool isGroup = true, TwitchConversation conversationType = TwitchConversation.Channel)
@@ -89,6 +91,7 @@ namespace NegativeEddy.Bots.Twitch
         private async Task ProcessBotJoinedChannelAsync(string botUsername, string channel)
         {
             Debug.Assert(_botId == botUsername);
+            _logger.LogInformation("joined channel {channel}", channel);
 
             var activity = CreateBaseActivity(channel);
             activity.Type = ActivityTypes.ConversationUpdate;
@@ -232,16 +235,27 @@ namespace NegativeEddy.Bots.Twitch
 
         public void Connect()
         {
+            _logger.LogInformation("connecting to Twitch");
             _client.Connect();
+
+            // connect to configured channels
+            _logger.LogInformation("connecting to initial channels");
+            foreach (var channel in _initialChannels)
+            {
+                Thread.Sleep(1000); // pause here. TwitchLib sometimes drops channels if joining too fast
+                JoinChannel(channel);
+            }
         }
 
         public void JoinChannel(string channel)
         {
+            _logger.LogInformation("joining channel {channel}", channel);
             _client.JoinChannel(channel);
         }
 
         public void LeaveChannel(string channel)
         {
+            _logger.LogInformation("leaving channel {channel}", channel);
             _client.LeaveChannel(channel);
         }
 
