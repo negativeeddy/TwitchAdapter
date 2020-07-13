@@ -62,7 +62,22 @@ The TwitchBotAdapter has methods on it to manage the twitch client directly if n
 
 # Optional Configuration
 The twitchBot settings section has optional values that will override the adapter defaults
+```
+{
+  "twitchBot": {
+      "UserId": "[bot's user ID]",
+      "ClientId": "[client ID]",
+      "OAuthToken": "[auth Token]"
+      "InitialChannels" : ["channel1", "channel2"],
+      "ThrottlingMessagesAllowedInPeriod": "750",
+      "ThrottlingPeriodInSeconds": "30"
+  }
+}
+```
+### InitialChannels
+default value: none
 
+This parameter is a string array of channel names that the twitch adapter will connect to after initialization. If left empty, no channels are connected by default.
 ### ThrottlingMessagesAllowedInPeriod 
 default value: 750
 ### ThrottlingPeriodInSeconds
