@@ -27,6 +27,7 @@ namespace NegativeEddy.Bots.Twitch
         private readonly ILogger _logger;
         private readonly string _botId;
         private readonly string[] _initialChannels;
+        private readonly char _commandIdentifier = '!';
 
         public TwitchAdapter(IServiceProvider services, TwitchAdapterSettings settings)
         {
@@ -49,12 +50,14 @@ namespace NegativeEddy.Bots.Twitch
             _client = new TwitchClient(customClient, ClientProtocol.WebSocket, loggerFactory.CreateLogger<TwitchClient>());
             _client.OnJoinedChannel += async (s, e) => await ProcessBotJoinedChannelAsync(e.BotUsername, e.Channel);
             _client.OnMessageReceived += async (s, e) => await ProcessChatMessageAsync(e.ChatMessage);
+            _client.OnChatCommandReceived += async (s, e) => await ProcessChatCommand(e.Command);
             _client.OnWhisperReceived += async (s, e) => await ProcessWhisperAsync(e.WhisperMessage);
+            _client.OnWhisperCommandReceived += async (s,e) => await ProcessWhisperCommandAsync(e.Command);
             _client.OnUserJoined += async (s, e) => await ProcessUserJoined(e.Channel, e.Username);
             _client.OnUserLeft += async (s, e) => await ProcessUserLeft(e.Channel, e.Username);
             _client.OnConnected += (s, e) => _logger.LogInformation($"Connected to {e.AutoJoinChannel}");
 
-            _client.Initialize(credentials);
+            _client.Initialize(credentials, chatCommandIdentifier: _commandIdentifier, whisperCommandIdentifier: _commandIdentifier);
 
             _initialChannels = (string[])settings.InitialChannels.Clone();
         }
@@ -105,6 +108,12 @@ namespace NegativeEddy.Bots.Twitch
 
         private async Task ProcessChatMessageAsync(ChatMessage message)
         {
+            if (message.Message[0] == _commandIdentifier)
+            {
+                // this is a command. It will be processed by ProcessChatCommand
+                return;
+            }
+
             _logger.LogInformation("received chat message in channel {channel}", message.Channel);
             var activity = CreateBaseActivity(message.Channel);
             activity.Text = message.Message;
@@ -115,9 +124,29 @@ namespace NegativeEddy.Bots.Twitch
             await ProcessActivityAsync(activity);
         }
 
+        private async Task ProcessChatCommand(ChatCommand command)
+        {
+            var message = command.ChatMessage; 
+            _logger.LogInformation("received chat command in channel {channel}", message.Channel);
+            var activity = CreateBaseActivity(message.Channel);
+            activity.From = new ChannelAccount(id: message.UserId, name: message.Username);
+            activity.Type = ActivityTypes.Event;
+            activity.Name = command.CommandText;
+            activity.Value = command.ArgumentsAsList;
+               
+            activity.ChannelData = System.Text.Json.JsonSerializer.Serialize(command);
+
+            await ProcessActivityAsync(activity);
+        }
 
         private async Task ProcessWhisperAsync(WhisperMessage whisper)
         {
+            if (whisper.Message[0] == _commandIdentifier)
+            {
+                // this is a command. It will be processed by ProcessChatCommand
+                return;
+            }
+
             _logger.LogInformation("received whisper");
             var activity = CreateBaseActivity(channel: whisper.Username, isGroup: false, conversationType: TwitchConversation.Whisper);
             activity.Text = whisper.Message;
@@ -126,6 +155,20 @@ namespace NegativeEddy.Bots.Twitch
             // override the default conversation
             activity.Type = ActivityTypes.Message;
             activity.ChannelData = System.Text.Json.JsonSerializer.Serialize(whisper);
+
+            await ProcessActivityAsync(activity);
+        }
+
+        private async Task ProcessWhisperCommandAsync(WhisperCommand command)
+        {
+            var whisper = command.WhisperMessage;
+            _logger.LogInformation("received whisper");
+            var activity = CreateBaseActivity(channel: whisper.Username, isGroup: false, conversationType: TwitchConversation.Whisper);
+            activity.From = new ChannelAccount(id: whisper.UserId, name: whisper.Username);
+            activity.Type = ActivityTypes.Event;
+            activity.Name = command.CommandText;
+            activity.Value = command.ArgumentsAsList;
+            activity.ChannelData = System.Text.Json.JsonSerializer.Serialize(command);
 
             await ProcessActivityAsync(activity);
         }

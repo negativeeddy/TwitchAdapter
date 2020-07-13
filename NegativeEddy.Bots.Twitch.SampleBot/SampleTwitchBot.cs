@@ -58,10 +58,6 @@ namespace NegativeEddy.Bots.Twitch
                     case "hi":
                         await turnContext.SendActivityAsync($"Hi again, @{userName}!", cancellationToken: cancellationToken);
                         break;
-                    case "!intro":
-                    case "!help":
-                        await turnContext.SendActivityAsync("Right now I cant help with much.");
-                        break;
                     default:
                         // do nothing
                         break;
@@ -70,6 +66,21 @@ namespace NegativeEddy.Bots.Twitch
 
             // Save any state changes.
             await _userState.SaveChangesAsync(turnContext);
+        }
+
+        protected override async Task OnEventAsync(ITurnContext<IEventActivity> turnContext, CancellationToken cancellationToken)
+        {
+            var activity = turnContext.Activity.AsEventActivity();
+            string command = activity.Name;
+            List<string> args = activity.Value as List<string>;
+
+            switch(command)
+            {
+                case "intro":
+                case "help":
+                    await turnContext.SendActivityAsync("Right now I cant help with much.");
+                    break;
+            }
         }
     }
 }
