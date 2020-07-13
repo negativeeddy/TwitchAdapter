@@ -33,10 +33,11 @@ namespace NegativeEddy.Bots.Twitch
             _services = services ?? throw new ArgumentNullException(nameof(services));
             var loggerFactory = services.GetRequiredService<ILoggerFactory>();
             _logger = (ILogger)loggerFactory.CreateLogger<TwitchAdapter>() ?? NullLogger.Instance;
-            _botId = settings?.UserId ?? throw new ArgumentNullException("UserId");
+            _botId = settings?.UserId ?? throw new ArgumentNullException(nameof(TwitchAdapterSettings.UserId));
+            
+            _logger.LogInformation("initializing twitch adapter");
 
             string token = settings.OAuthToken ?? throw new ArgumentNullException("OAuthToken");
-
             ConnectionCredentials credentials = new ConnectionCredentials(_botId, token);
             var clientOptions = new ClientOptions
             {
@@ -72,6 +73,7 @@ namespace NegativeEddy.Bots.Twitch
 
         private async Task ProcessUserLeft(string channel, string username)
         {
+            _logger.LogInformation("user left channel {channel}", channel);
             var activity = CreateBaseActivity(channel);
             activity.Type = ActivityTypes.ConversationUpdate;
             activity.MembersRemoved = new[] { new ChannelAccount(id: username, name: username) };
@@ -81,6 +83,7 @@ namespace NegativeEddy.Bots.Twitch
 
         private async Task ProcessUserJoined(string channel, string username)
         {
+            _logger.LogInformation("user joined channel {channel}", channel);
             var activity = CreateBaseActivity(channel);
             activity.Type = ActivityTypes.ConversationUpdate;
             activity.MembersAdded = new[] { new ChannelAccount(id: username, name: username) };
@@ -102,6 +105,7 @@ namespace NegativeEddy.Bots.Twitch
 
         private async Task ProcessChatMessageAsync(ChatMessage message)
         {
+            _logger.LogInformation("received chat message in channel {channel}", message.Channel);
             var activity = CreateBaseActivity(message.Channel);
             activity.Text = message.Message;
             activity.From = new ChannelAccount(id: message.UserId, name: message.Username);
@@ -114,6 +118,7 @@ namespace NegativeEddy.Bots.Twitch
 
         private async Task ProcessWhisperAsync(WhisperMessage whisper)
         {
+            _logger.LogInformation("received whisper");
             var activity = CreateBaseActivity(channel: whisper.Username, isGroup: false, conversationType: TwitchConversation.Whisper);
             activity.Text = whisper.Message;
             activity.From = new ChannelAccount(id: whisper.UserId, name: whisper.Username);
