@@ -163,7 +163,7 @@ namespace NegativeEddy.Bots.Twitch
             activity.From = new ChannelAccount(id: message.UserId, name: message.Username);
             activity.Type = ActivityTypes.Event;
             activity.Name = TwitchEvents.Command;
-            activity.Value = command.ArgumentsAsString;
+            activity.Value = (command.CommandText, command.ArgumentsAsList);
             activity.ChannelData = command;
 
             await ProcessActivityAsync(activity);
@@ -197,7 +197,7 @@ namespace NegativeEddy.Bots.Twitch
             activity.From = new ChannelAccount(id: whisper.UserId, name: whisper.Username);
             activity.Type = ActivityTypes.Event;
             activity.Name = TwitchEvents.Command;
-            activity.Value = command.ArgumentsAsString;
+            activity.Value = (command.CommandText, command.ArgumentsAsList);
             activity.ChannelData = command;
 
             await ProcessActivityAsync(activity);

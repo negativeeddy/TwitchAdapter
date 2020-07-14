@@ -91,12 +91,15 @@ namespace NegativeEddy.Bots.Twitch
 
         private static async Task OnCommand(ITurnContext<IEventActivity> turnContext, IEventActivity activity)
         {
-            string[] command = activity.Value.ToString().Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            switch (command[0])
+            (string command, List<string> args) = (ValueTuple<string, List<string>>)activity.Value;
+            switch (command)
             {
                 case "intro":
                 case "help":
-                    await turnContext.SendActivityAsync("Right now I cant help with much.");
+                    await turnContext.SendActivityAsync("Right now I can't help with much.");
+                    break;
+                case "echo":
+                    await turnContext.SendActivityAsync(string.Join(' ', args));
                     break;
             }
         }
