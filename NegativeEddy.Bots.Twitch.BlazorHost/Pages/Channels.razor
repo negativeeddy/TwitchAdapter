@@ -7,7 +7,7 @@
     @foreach (var channel in adapter.JoinedChannels)
     {
         <div style="display:table-row; padding:15px">
-            <div style="display:table-cell; text-align:left; padding:inherit">@channel.Channel</div>
+            <div style="display:table-cell; text-align:left; padding:inherit"><a href="https://www.twitch.tv/@channel.Channel" target="_blank">@channel.Channel</a></div>
             <div style="display:table-cell; padding:inherit"><button class="btn btn-primary" @onclick="() => LeaveChannel(channel.Channel)">Leave</button></div>
         </div>
     }
