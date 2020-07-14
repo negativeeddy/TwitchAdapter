@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace NegativeEddy.Bots.Twitch
+﻿namespace NegativeEddy.Bots.Twitch
 {
     public class TwitchAdapterSettings
     {

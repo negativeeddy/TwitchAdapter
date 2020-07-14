@@ -5,7 +5,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NegativeEddy.Bots.Twitch.AspNetCore;
-using NegativeEddy.Bots.Twitch.AspNetHost;
 
 namespace NegativeEddy.Bots.Twitch.BlazorHost
 {

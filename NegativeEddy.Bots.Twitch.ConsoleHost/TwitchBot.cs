@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
@@ -8,7 +7,7 @@ namespace NegativeEddy.Bots.Twitch.Sample
 {
     public class TwitchBot : IBot
     {
-        public async Task OnTurnAsync(ITurnContext turnContext, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task OnTurnAsync(ITurnContext turnContext, CancellationToken cancellationToken = default)
         {
             // Handle Message activity type, which is the main activity type within a conversational interface
             // Message activities may contain text, speech, interactive cards, and binary or unknown attachments.
