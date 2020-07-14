@@ -131,8 +131,8 @@ namespace NegativeEddy.Bots.Twitch
             var activity = CreateBaseActivity(message.Channel);
             activity.From = new ChannelAccount(id: message.UserId, name: message.Username);
             activity.Type = ActivityTypes.Event;
-            activity.Name = command.CommandText;
-            activity.Value = command.ArgumentsAsList;
+            activity.Name = TwitchEvents.Command;
+            activity.Value = command.ArgumentsAsString;
                
             activity.ChannelData = command;
 
@@ -166,8 +166,8 @@ namespace NegativeEddy.Bots.Twitch
             var activity = CreateBaseActivity(channel: whisper.Username, isGroup: false, conversationType: TwitchConversation.Whisper);
             activity.From = new ChannelAccount(id: whisper.UserId, name: whisper.Username);
             activity.Type = ActivityTypes.Event;
-            activity.Name = command.CommandText;
-            activity.Value = command.ArgumentsAsList;
+            activity.Name = TwitchEvents.Command;
+            activity.Value = command.ArgumentsAsString;
             activity.ChannelData = command;
 
             await ProcessActivityAsync(activity);
@@ -235,6 +235,10 @@ namespace NegativeEddy.Bots.Twitch
                                 if (activity.Conversation.ConversationType == TwitchConversationString.Channel)
                                 {
                                     _client.SendMessage(twitchChannel, message.Text);
+                                }
+                                else if (activity.Conversation.ConversationType == TwitchConversationString.Whisper)
+                                {
+                                    _client.SendWhisper(twitchChannel, message.Text);
                                 }
                             }
                         }
