@@ -11,8 +11,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using TwitchLib.Client;
 using TwitchLib.Client.Enums;
+using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Clients;
+using TwitchLib.Communication.Events;
 using TwitchLib.Communication.Models;
 
 namespace NegativeEddy.Bots.Twitch
@@ -56,6 +58,7 @@ namespace NegativeEddy.Bots.Twitch
             _client.OnUserJoined += async (s, e) => await ProcessUserJoined(e.Channel, e.Username);
             _client.OnUserLeft += async (s, e) => await ProcessUserLeft(e.Channel, e.Username);
             _client.OnConnected += (s, e) => _logger.LogInformation($"Connected to {e.AutoJoinChannel}");
+            _client.OnExistingUsersDetected += Client_OnExistingUsersDetected;
 
             _client.Initialize(credentials, chatCommandIdentifier: _commandIdentifier, whisperCommandIdentifier: _commandIdentifier);
 
@@ -80,6 +83,18 @@ namespace NegativeEddy.Bots.Twitch
             var activity = CreateBaseActivity(channel);
             activity.Type = ActivityTypes.ConversationUpdate;
             activity.MembersRemoved = new[] { new ChannelAccount(id: username, name: username) };
+
+            await ProcessActivityAsync(activity);
+        }
+
+        private async void Client_OnExistingUsersDetected(object sender, OnExistingUsersDetectedArgs e)
+        {
+            string channel = e.Channel;
+            
+            _logger.LogInformation("existing users detected in channel {channel}", channel);
+            var activity = CreateBaseActivity(channel);
+            activity.Type = ActivityTypes.ConversationUpdate;
+            activity.MembersAdded = e.Users.Select( u=>  new ChannelAccount(id: u, name: u)).ToList();
 
             await ProcessActivityAsync(activity);
         }
