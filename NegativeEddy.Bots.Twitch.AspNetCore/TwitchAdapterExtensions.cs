@@ -10,14 +10,6 @@ namespace NegativeEddy.Bots.Twitch.AspNetCore
         {
             services.AddSingleton<TwitchAdapter>(sp => new TwitchAdapter(sp, settings))
                     .AddHostedService<TwitchBotWorker>();
-
-            services.AddHttpClient("ShoutoutCommand", c =>
-            {
-                c.BaseAddress = new Uri("https://api.twitch.tv/kraken/channels/");
-                c.DefaultRequestHeaders.Add("client-id", settings.ClientId);
-            });
-
-
             return services;
         }
     }

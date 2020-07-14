@@ -78,12 +78,6 @@ namespace NegativeEddy.Bots.Twitch.ConsoleHost
             .AddTransient<IBot, TwitchBot>()
             .AddSingleton<TwitchAdapter>(sp => new TwitchAdapter(sp, twitchSettings));
 
-            services.AddHttpClient("ShoutoutCommand", c =>
-            {
-                c.BaseAddress = new Uri("https://api.twitch.tv/kraken/channels/");
-                c.DefaultRequestHeaders.Add("client-id", config["twitchBot:ClientId"]);
-            });
-
             services.Configure<TwitchAdapterSettings>(config.GetSection("twitchBot"));
 
             return services.BuildServiceProvider();

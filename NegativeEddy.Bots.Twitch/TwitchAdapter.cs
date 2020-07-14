@@ -119,7 +119,7 @@ namespace NegativeEddy.Bots.Twitch
             activity.Text = message.Message;
             activity.From = new ChannelAccount(id: message.UserId, name: message.Username);
             activity.Type = ActivityTypes.Message;
-            activity.ChannelData = System.Text.Json.JsonSerializer.Serialize(message);
+            activity.ChannelData = message;
 
             await ProcessActivityAsync(activity);
         }
@@ -134,7 +134,7 @@ namespace NegativeEddy.Bots.Twitch
             activity.Name = command.CommandText;
             activity.Value = command.ArgumentsAsList;
                
-            activity.ChannelData = System.Text.Json.JsonSerializer.Serialize(command);
+            activity.ChannelData = command;
 
             await ProcessActivityAsync(activity);
         }
@@ -154,7 +154,7 @@ namespace NegativeEddy.Bots.Twitch
 
             // override the default conversation
             activity.Type = ActivityTypes.Message;
-            activity.ChannelData = System.Text.Json.JsonSerializer.Serialize(whisper);
+            activity.ChannelData = whisper;
 
             await ProcessActivityAsync(activity);
         }
@@ -168,7 +168,7 @@ namespace NegativeEddy.Bots.Twitch
             activity.Type = ActivityTypes.Event;
             activity.Name = command.CommandText;
             activity.Value = command.ArgumentsAsList;
-            activity.ChannelData = System.Text.Json.JsonSerializer.Serialize(command);
+            activity.ChannelData = command;
 
             await ProcessActivityAsync(activity);
         }
