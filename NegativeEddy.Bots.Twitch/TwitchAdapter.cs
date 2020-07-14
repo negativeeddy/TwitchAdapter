@@ -24,7 +24,7 @@ namespace NegativeEddy.Bots.Twitch
         private const int DEFAULT_THROTTLING_PERIOD = 30;
         private const int DEFAULT_THROTTLING_COUNT = 750;
 
-        private TwitchClient _client;
+        private readonly TwitchClient _client;
         private readonly IServiceProvider _services;
         private readonly ILogger _logger;
         private readonly string _botId;
@@ -216,7 +216,7 @@ namespace NegativeEddy.Bots.Twitch
             await this.RunPipelineAsync(
                 context,
                 async (turnContext, cancellationToken) => await bot.OnTurnAsync(turnContext),
-                default(CancellationToken)
+                default
                 );
         }
 

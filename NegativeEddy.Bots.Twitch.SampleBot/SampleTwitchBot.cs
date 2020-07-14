@@ -10,7 +10,7 @@ namespace NegativeEddy.Bots.Twitch
 {
     public class SampleTwitchBot : ActivityHandler
     {
-        private BotState _userState;
+        private readonly BotState _userState;
 
         public SampleTwitchBot(UserState userState)
         {
