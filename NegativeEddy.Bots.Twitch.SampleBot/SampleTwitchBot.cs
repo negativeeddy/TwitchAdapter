@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using TwitchLib.Client.Events;
 
 namespace NegativeEddy.Bots.Twitch
 {
@@ -71,10 +72,27 @@ namespace NegativeEddy.Bots.Twitch
         protected override async Task OnEventAsync(ITurnContext<IEventActivity> turnContext, CancellationToken cancellationToken)
         {
             var activity = turnContext.Activity.AsEventActivity();
-            string command = activity.Name;
-            List<string> args = activity.Value as List<string>;
 
-            switch(command)
+            switch (activity.Name)
+            {
+                case TwitchEvents.Command:
+                    await OnCommand(turnContext, activity);
+                    break;
+                case TwitchEvents.ModeratorJoined:
+                    await OnModeratorJoinedArgs(turnContext, activity);
+                    break;
+            }
+        }
+
+        private async Task OnModeratorJoinedArgs(ITurnContext<IEventActivity> turnContext, IEventActivity activity)
+        {
+            await turnContext.SendActivityAsync($"Everyone be cool. Mod {activity.Value} just arrived.");
+        }
+
+        private static async Task OnCommand(ITurnContext<IEventActivity> turnContext, IEventActivity activity)
+        {
+            string[] command = activity.Value.ToString().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            switch (command[0])
             {
                 case "intro":
                 case "help":

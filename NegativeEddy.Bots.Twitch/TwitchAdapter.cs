@@ -59,6 +59,7 @@ namespace NegativeEddy.Bots.Twitch
             _client.OnUserLeft += async (s, e) => await ProcessUserLeft(e.Channel, e.Username);
             _client.OnConnected += (s, e) => _logger.LogInformation($"Connected to {e.AutoJoinChannel}");
             _client.OnExistingUsersDetected += Client_OnExistingUsersDetected;
+            _client.OnModeratorJoined += Client_OnModeratorJoined;
 
             _client.Initialize(credentials, chatCommandIdentifier: _commandIdentifier, whisperCommandIdentifier: _commandIdentifier);
 
@@ -75,6 +76,21 @@ namespace NegativeEddy.Bots.Twitch
                 Id = Guid.NewGuid().ToString(),
                 Recipient = new ChannelAccount(id: _botId, name: _botId),
             };
+        }
+
+        private async void Client_OnModeratorJoined(object sender, OnModeratorJoinedArgs e)
+        {
+            string channel = e.Channel;
+            string username = e.Username;
+
+            _logger.LogInformation("moderator joined channel {channel}", channel);
+            var activity = CreateBaseActivity(channel);
+            activity.From = new ChannelAccount(id: username, name: username);
+            activity.Type = ActivityTypes.Event;
+            activity.Name = TwitchEvents.ModeratorJoined;
+            activity.Value = username;
+
+            await ProcessActivityAsync(activity);
         }
 
         private async Task ProcessUserLeft(string channel, string username)
@@ -148,7 +164,6 @@ namespace NegativeEddy.Bots.Twitch
             activity.Type = ActivityTypes.Event;
             activity.Name = TwitchEvents.Command;
             activity.Value = command.ArgumentsAsString;
-               
             activity.ChannelData = command;
 
             await ProcessActivityAsync(activity);
