@@ -1,7 +1,10 @@
 ﻿using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
+using NegativeEddy.Bots.Twitch.SampleBot.Commands;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,10 +13,12 @@ namespace NegativeEddy.Bots.Twitch
     public class SampleTwitchBot : ActivityHandler
     {
         private readonly BotState _userState;
+        private readonly IReadOnlyDictionary<string, IBotCommand> _commands;
 
-        public SampleTwitchBot(UserState userState)
+        public SampleTwitchBot(UserState userState, BotCommandManager cmdMgr)
         {
             _userState = userState;
+            _commands =  cmdMgr.Commands;
         }
 
         protected override async Task OnMembersRemovedAsync(IList<ChannelAccount> membersRemoved, ITurnContext<IConversationUpdateActivity> turnContext, CancellationToken cancellationToken)
@@ -75,31 +80,25 @@ namespace NegativeEddy.Bots.Twitch
             switch (activity.Name)
             {
                 case TwitchEvents.Command:
-                    await OnCommand(turnContext, activity);
+                    await OnCommand(turnContext);
                     break;
                 case TwitchEvents.ModeratorJoined:
-                    await OnModeratorJoinedArgs(turnContext, activity);
+                    await OnModeratorJoinedArgs(turnContext);
                     break;
             }
         }
 
-        private async Task OnModeratorJoinedArgs(ITurnContext<IEventActivity> turnContext, IEventActivity activity)
+        private async Task OnModeratorJoinedArgs(ITurnContext<IEventActivity> turnContext)
         {
-            await turnContext.SendActivityAsync($"Everyone be cool. Mod {activity.Value} just arrived.");
+            await turnContext.SendActivityAsync($"Everyone be cool. Mod {turnContext.Activity.Value} just arrived.");
         }
 
-        private static async Task OnCommand(ITurnContext<IEventActivity> turnContext, IEventActivity activity)
+        private async Task OnCommand(ITurnContext<IEventActivity> turnContext)
         {
-            (string command, List<string> args) = (ValueTuple<string, List<string>>)activity.Value;
-            switch (command)
+            (string command, List<string> args) = (ValueTuple<string, List<string>>)turnContext.Activity.Value;
+            if (_commands.TryGetValue(command, out IBotCommand botCommand))
             {
-                case "intro":
-                case "help":
-                    await turnContext.SendActivityAsync("Right now I can't help with much.");
-                    break;
-                case "echo":
-                    await turnContext.SendActivityAsync(string.Join(' ', args));
-                    break;
+                await botCommand.ExecuteAsync(turnContext, args);
             }
         }
     }

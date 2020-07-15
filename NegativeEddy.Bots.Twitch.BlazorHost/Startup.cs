@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NegativeEddy.Bots.Twitch.AspNetCore;
+using NegativeEddy.Bots.Twitch.SampleBot.Commands;
 
 namespace NegativeEddy.Bots.Twitch.BlazorHost
 {
@@ -29,6 +30,11 @@ namespace NegativeEddy.Bots.Twitch.BlazorHost
 
             // Create the User state.
             services.AddSingleton<UserState>();
+
+            var cmdMgr = new BotCommandManager();
+            cmdMgr.Add(new EchoCommand());
+            cmdMgr.Add(new TextResponseCommand("help", "", "sorry I can't help you"));
+            services.AddSingleton<BotCommandManager>(cmdMgr);
 
             services.AddTransient<IBot, SampleTwitchBot>();
 
