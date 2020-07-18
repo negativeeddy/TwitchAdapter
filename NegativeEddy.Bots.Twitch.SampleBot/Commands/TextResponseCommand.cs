@@ -16,9 +16,9 @@ namespace NegativeEddy.Bots.Twitch.SampleBot.Commands
             _response = response;
         }
 
-        public string Command { get; }
+        public string Command { get; set; }
 
-        public string Description { get; }
+        public string Description { get; set; }
 
         public async Task ExecuteAsync(ITurnContext context, IList<string> args)
         {

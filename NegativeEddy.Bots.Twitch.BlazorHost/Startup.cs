@@ -33,10 +33,15 @@ namespace NegativeEddy.Bots.Twitch.BlazorHost
 
             var cmdMgr = new BotCommandManager();
             cmdMgr.Add(new EchoCommand());
-            cmdMgr.Add(new LGResponseCommand("lg", @"# response
-                                                    - line 1
-                                                    - line 2
-                                                    - line 3"));
+            cmdMgr.Add(new LGResponseCommand
+            {
+                Command = "lg",
+                Template = 
+@"# response
+- line 1
+- line 2
+- line 3"
+            });
             cmdMgr.Add(new TextResponseCommand("help", "", "sorry I can't help you"));
             services.AddSingleton<BotCommandManager>(cmdMgr);
 
