@@ -63,6 +63,14 @@ namespace NegativeEddy.Bots.Twitch.BlazorHost
                         - I'll be back
                         - Houston, we have a problem"
                 },
+                new LGResponseCommand
+                {
+                    Command = "specs",
+                    Template =
+                        @"# response
+                        - Not as good as most streamers
+                        - Wouldn't you like to know?"
+                },
                 new TextResponseCommand("help", "", "sorry I can't help you"),
                 new JoinCommand(),
                 new LeaveCommand(),
