@@ -49,12 +49,13 @@ namespace NegativeEddy.Bots.Twitch.BlazorHost
                 new BeforeAndAfterCommandDecorator( new EchoCommand()),
                 new LGResponseCommand
                 {
-                    Command = "lg",
+                    Command = "quote",
                     Template =
                         @"# response
-                        - line 1
-                        - line 2
-                        - line 3"
+                        - May the Force be with you
+                        - There's no place like home
+                        - I'll be back
+                        - Houston, we have a problem"
                 },
                 new TextResponseCommand("help", "", "sorry I can't help you"),
                 new JoinCommand(),
