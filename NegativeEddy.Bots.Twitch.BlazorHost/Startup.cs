@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NegativeEddy.Bots.Twitch.AspNetCore;
 using NegativeEddy.Bots.Twitch.SampleBot.Commands;
+using System;
 
 namespace NegativeEddy.Bots.Twitch.BlazorHost
 {
@@ -47,6 +48,11 @@ namespace NegativeEddy.Bots.Twitch.BlazorHost
             cmdMgr.Add(new IBotCommand[]
             {
                 new BeforeAndAfterCommandDecorator( new EchoCommand()),
+                new CoolDownOption( new EchoCommand() { Command="slowecho" })
+                {
+                    Cooldown =  TimeSpan.FromSeconds(10),
+                    CooldownMessage ="Whoa there slick! too fast for me!"
+                },
                 new LGResponseCommand
                 {
                     Command = "quote",
