@@ -9,7 +9,7 @@ namespace NegativeEddy.Bots.Twitch.SampleBot.Commands
     {
         public string Command { get; set; } = "echo";
 
-        public string Description { get; set; } = "Echo's the input back to the user";
+        public string Description { get; set; } = "Echos the input back to the user";
 
         public async Task ExecuteAsync(ITurnContext context, IList<string> args)
         {
