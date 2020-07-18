@@ -30,19 +30,7 @@ namespace NegativeEddy.Bots.Twitch.BlazorHost
 
             // Create the User state.
             services.AddSingleton<UserState>();
-
-            var cmdMgr = new BotCommandManager();
-            cmdMgr.Add(new EchoCommand());
-            cmdMgr.Add(new LGResponseCommand
-            {
-                Command = "lg",
-                Template = 
-@"# response
-- line 1
-- line 2
-- line 3"
-            });
-            cmdMgr.Add(new TextResponseCommand("help", "", "sorry I can't help you"));
+            BotCommandManager cmdMgr = SetUpCommands();
             services.AddSingleton<BotCommandManager>(cmdMgr);
 
             services.AddTransient<IBot, SampleTwitchBot>();
@@ -51,6 +39,28 @@ namespace NegativeEddy.Bots.Twitch.BlazorHost
             Configuration.GetSection("twitchBot").Bind(twitchSettings);
 
             services.AddTwitchBotAdapter(twitchSettings);
+        }
+
+        private static BotCommandManager SetUpCommands()
+        {
+            var cmdMgr = new BotCommandManager();
+            cmdMgr.Add(new IBotCommand[]
+            {
+                new BeforeAndAfterCommandDecorator( new EchoCommand()),
+                new LGResponseCommand
+                {
+                    Command = "lg",
+                    Template =
+                        @"# response
+                        - line 1
+                        - line 2
+                        - line 3"
+                },
+                new TextResponseCommand("help", "", "sorry I can't help you"),
+                new JoinCommand(),
+                new LeaveCommand(),
+            });
+            return cmdMgr;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

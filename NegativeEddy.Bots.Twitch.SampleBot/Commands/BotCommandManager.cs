@@ -16,6 +16,14 @@ namespace NegativeEddy.Bots.Twitch.SampleBot.Commands
             _commands.Add(command.Command, command);
         }
 
+        public void Add(IEnumerable<IBotCommand> commands)
+        {
+            foreach (var command in commands)
+            {
+                _commands.Add(command.Command, command);
+            }
+        }
+
         public void Remove(IBotCommand command)
         {
             _commands.Remove(command.Command);

@@ -7,12 +7,7 @@ namespace NegativeEddy.Bots.Twitch.SampleBot.Commands
 {
     public class EchoCommand : IBotCommand
     {
-        public EchoCommand(string command = "echo")
-        {
-            Command = command;
-        }
-
-        public string Command { get; set; }
+        public string Command { get; set; } = "echo";
 
         public string Description { get; set; } = "Echo's the input back to the user";
 
