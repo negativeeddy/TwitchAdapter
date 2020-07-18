@@ -7,7 +7,7 @@ namespace NegativeEddy.Bots.Twitch.SampleBot.Commands
 {
     public class TextResponseCommand : IBotCommand
     {
-        private string _response;
+        private readonly string _response;
 
         public TextResponseCommand(string command, string description, string response)
         {

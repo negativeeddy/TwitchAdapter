@@ -5,10 +5,10 @@ namespace NegativeEddy.Bots.Twitch.SampleBot.Commands
 {
     public class BotCommandManager
     {
+        private readonly IDictionary<string, IBotCommand> _commands = new Dictionary<string, IBotCommand>();
+
         public IReadOnlyDictionary<string, IBotCommand> Commands =>
             new ReadOnlyDictionary<string, IBotCommand>(_commands);
-
-        private IDictionary<string, IBotCommand> _commands { get; } = new Dictionary<string, IBotCommand>();
 
         public void Add(IBotCommand command)
         {

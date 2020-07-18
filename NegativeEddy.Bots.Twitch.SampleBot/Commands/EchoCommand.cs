@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 
 namespace NegativeEddy.Bots.Twitch.SampleBot.Commands
 {
-
     public class EchoCommand : IBotCommand
     {
         public EchoCommand(string command = "echo")
