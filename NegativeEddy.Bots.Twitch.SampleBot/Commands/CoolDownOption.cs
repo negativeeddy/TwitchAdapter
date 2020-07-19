@@ -30,7 +30,7 @@ namespace NegativeEddy.Bots.Twitch.SampleBot.Commands
                 var time = DateTime.Now + Cooldown;
                 Debug.WriteLine($"adding entry for {currentUser} - {time}");
                 _coolDownExpirations.AddOrUpdate(currentUser, time, (u, d) => time);
-                await Instance.ExecuteAsync(context, args);
+                await Command.ExecuteAsync(context, args);
             }
             else if (!string.IsNullOrWhiteSpace(CooldownMessage))
             {

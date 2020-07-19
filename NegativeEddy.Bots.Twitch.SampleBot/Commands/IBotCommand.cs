@@ -8,8 +8,8 @@ namespace NegativeEddy.Bots.Twitch.SampleBot.Commands
 {
     public interface IBotCommand
     {
-        string Command { get; set; }
-        string Description { get; set; }
+        string Name { get; }
+        string Description { get; }
         Task ExecuteAsync(ITurnContext context, IList<string> args);
     }
 }
