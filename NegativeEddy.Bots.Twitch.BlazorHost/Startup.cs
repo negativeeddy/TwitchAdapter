@@ -54,7 +54,7 @@ namespace NegativeEddy.Bots.Twitch.BlazorHost
                 ("echo",
                 new BeforeAndAfterCommandDecorator( new EchoCommand())),
                 ("slowecho",
-                new CoolDownOption( new EchoCommand() )
+                new CoolDownDecorator( new EchoCommand() )
                 {
                     Cooldown =  TimeSpan.FromSeconds(10),
                     CooldownMessage ="Whoa there slick! too fast for me!"

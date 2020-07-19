@@ -22,7 +22,7 @@ namespace NegativeEddy.Bots.Twitch.BlazorHost.Model
         public readonly ReadOnlyDictionary<string, Type> DefaultOptions =
          new ReadOnlyDictionary<string, Type>(new Dictionary<string, Type>
          {
-                        {"cooldown", typeof(CoolDownOption) },
+                        {"cooldown", typeof(CoolDownDecorator) },
                         {"before and after", typeof(BeforeAndAfterCommandDecorator) },
          });
 
