@@ -1,11 +1,46 @@
 ﻿@using NegativeEddy.Bots.Twitch.SampleBot.Commands
 <div class="commandeditor">
-    <div>option list</div>
-    <div>DECORATED COMMAND EDITOR</div>
+    <div>
+        @foreach (var decorator in decorators)
+        {
+        <div>
+            @switch (decorator)
+            {
+                case CoolDownDecorator d:
+                    <CooldownDecoratorEditor Decorator="@d" />
+                    break;
+                case BeforeAndAfterCommandDecorator d:
+                default:
+                    <UnknownCommandDecoratorEdit Decorator="@decorator" />
+                    break;
+            }
+            <button>Delete</button>
+        </div>
+        }
+    </div>
+    <div>
+    <GenericCommandEditor Command="@command"/>
+    </div>
 </div>
 
 
 @code {
     [Parameter]
-    public BotCommandDecorator command { get; set; }
+    public BotCommandDecorator Decorator { get; set; }
+
+    List<BotCommandDecorator> decorators = new List<BotCommandDecorator>();
+    IBotCommand command;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        IBotCommand tmp = Decorator;
+        while (tmp is BotCommandDecorator bcd)
+        {
+            decorators.Add(bcd);
+            tmp = bcd.Command;
+        }
+        command = tmp;
+    }
 }

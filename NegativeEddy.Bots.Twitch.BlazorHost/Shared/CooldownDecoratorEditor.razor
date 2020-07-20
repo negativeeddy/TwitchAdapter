@@ -1,0 +1,12 @@
+﻿@using NegativeEddy.Bots.Twitch.SampleBot.Commands
+@using NegativeEddy.Bots.Twitch.BlazorHost.Shared
+<div class="commandeditor">
+    <label for="template"><span style="font-weight:bold">Cooldown </span>(in seconds)</label>
+    <input type="text" id="template" @bind="Decorator.Cooldown"/>
+</div>
+
+
+@code {
+    [Parameter]
+    public CoolDownDecorator Decorator { get; set; }
+}

@@ -20,6 +20,8 @@ namespace NegativeEddy.Bots.Twitch.SampleBot.Commands
 
         public string? CooldownMessage { get; set; }
 
+        public override string DecoratorName => "cooldown";
+
         private readonly ConcurrentDictionary<string, DateTime> _coolDownExpirations = new ConcurrentDictionary<string, DateTime>();
         public override async Task ExecuteAsync(ITurnContext context, IList<string> args)
         {

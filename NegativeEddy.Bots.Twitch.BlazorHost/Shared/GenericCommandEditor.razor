@@ -1,0 +1,31 @@
+﻿@using NegativeEddy.Bots.Twitch.SampleBot.Commands
+    <div class="commandeditor">
+        @switch (Command)
+        {
+            case EchoCommand cmd:
+                <NoConfigCommandEdit Command="@cmd" />
+                break;
+            case LGResponseCommand cmd:
+                <LGResponseCommandEdit Command="@cmd" />
+                break;
+            case BotCommandDecorator decorator:
+                <DecoratedCommandEdit Decorator="@decorator" />
+                break;
+            case TextResponseCommand tr:
+                <TextResponseEdit Command="@tr" />
+                break;
+            case JoinCommand tr:
+            case LeaveCommand lc:
+                <NullCommandEdit Command="@Command" />
+                break;
+            default:
+                <UnknownCommandEdit Command="@Command" />
+                break;
+        }
+    </div>
+
+
+@code {
+    [Parameter]
+    public IBotCommand Command { get; set; }
+}

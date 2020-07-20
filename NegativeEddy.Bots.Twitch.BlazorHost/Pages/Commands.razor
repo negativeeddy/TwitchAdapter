@@ -12,28 +12,7 @@
         <div style="display:table-row; padding:15px">
             <div><b>!@cmdInfo.Key</b> (@cmdInfo.Value.Name)</div>
             <div style="margin-bottom:20px;">
-                @switch (cmdInfo.Value)
-                {
-                    case EchoCommand cmd:
-                        <EchoCommandEdit />
-                        break;
-                    case LGResponseCommand cmd:
-                        <LGResponseCommandEdit command="@cmd" />
-                        break;
-                    case BotCommandDecorator lgc:
-                        <DecoratedCommandEdit command="@lgc" />
-                        break;
-                    case TextResponseCommand tr:
-                        <TextResponseEdit command="@tr" />
-                        break;
-                    case JoinCommand tr:
-                    case LeaveCommand lc:
-                        <NullCommandEdit command="@cmdInfo.Value" />
-                        break;
-                    default:
-                        <UnknownCommandEdit command="@cmdInfo.Value" />
-                        break;
-                }
+                <GenericCommandEditor Command="@cmdInfo.Value"/>
             </div>
         </div>
     }

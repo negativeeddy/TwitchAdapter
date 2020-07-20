@@ -52,9 +52,12 @@ namespace NegativeEddy.Bots.Twitch.BlazorHost
             cmdMgr.Add(new (string, IBotCommand)[]
             {
                 ("echo",
-                new BeforeAndAfterCommandDecorator( new EchoCommand())),
+                new BeforeAndAfterCommandDecorator( 
+                    new EchoCommand())),
                 ("slowecho",
-                new CoolDownDecorator( new EchoCommand() )
+                new CoolDownDecorator( 
+                    new BeforeAndAfterCommandDecorator(
+                    new EchoCommand() ))
                 {
                     Cooldown =  TimeSpan.FromSeconds(10),
                     CooldownMessage ="Whoa there slick! too fast for me!"
@@ -80,6 +83,8 @@ namespace NegativeEddy.Bots.Twitch.BlazorHost
 - Wouldn't you like to know?"
                 })
             });
+
+            return cmdMgr;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

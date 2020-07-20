@@ -18,15 +18,17 @@ namespace NegativeEddy.Bots.Twitch.SampleBot.Commands
 
         public string Name => Command.Name;
         public string Description => Command.Description;
-        public string DecoratorName { get; set; }
-        public IEnumerable<string> Decorators()
+        public abstract string DecoratorName { get; }
+        public IEnumerable<BotCommandDecorator> Decorators()
         {
-            IEnumerable<string> result = new[] { DecoratorName };
             if (Command is BotCommandDecorator decorator)
             {
-                result = result.Concat(decorator.Decorators());
+                return decorator.Decorators().Append(this);
             }
-            return result;
+            else
+            {
+                return new[] { this };
+            }
         }
         public abstract Task ExecuteAsync(ITurnContext context, IList<string> args);
     }
