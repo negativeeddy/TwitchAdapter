@@ -2,7 +2,11 @@
 @using NegativeEddy.Bots.Twitch.BlazorHost.Shared
 <div class="commandeditor">
     <label for="template"><span style="font-weight:bold">Cooldown </span>(in seconds)</label>
-    <input type="text" id="template" @bind="Decorator.Cooldown"/>
+    <input type="text" id="template" @bind="Decorator.Cooldown" />
+</div>
+<div>
+    <label for="message"><span style="font-weight:bold">Optional message</span></label>
+    <input type="text" id="message" @bind="Decorator.CooldownMessage" />
 </div>
 
 
