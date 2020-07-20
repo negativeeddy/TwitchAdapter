@@ -10,12 +10,15 @@
 <div style="display:table">
     @foreach (var cmdInfo in commands.Commands)
     {
-        <div style="display:table-row; padding:15px">
-            <div><span style="font-weight:bolder; font-size:larger">!@cmdInfo.Key</span> (@cmdInfo.Value.Name)</div>
-            <div><button @onclick="async e => await OnDelete(cmdInfo.Key)">Delete command</button><button>Add Option</button></div>
+        <div style="display:table-row;">
+            <div style="display:table-cell;padding:25px;">
+                <div><span style="font-weight:bolder; font-size:larger">!@cmdInfo.Key</span> (@cmdInfo.Value.Name)</div>
+                <div><button>Add Option</button></div>
 
-            <div style="margin-bottom:20px;">
-                <GenericCommandEditor Command="@cmdInfo.Value"  CommandReplaced=@OnCommandReplaced/>
+                <div>
+                    <GenericCommandEditor Command="@cmdInfo.Value" CommandReplaced=@OnCommandReplaced />
+                </div>
+                <button  @onclick="async e => await OnDelete(cmdInfo.Key)">Delete !@cmdInfo.Key</button>
             </div>
         </div>
     }
