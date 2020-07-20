@@ -1,9 +1,11 @@
 ﻿@using NegativeEddy.Bots.Twitch.SampleBot.Commands
-<div class="top-row pl-4 navbar navbar-dark">
+<div class="commandeditor">
+    <div>option list</div>
+    <div>DECORATED COMMAND EDITOR</div>
 </div>
 
 
 @code {
     [Parameter]
-    public IBotCommand command { get; set; }
+    public BotCommandDecorator command { get; set; }
 }

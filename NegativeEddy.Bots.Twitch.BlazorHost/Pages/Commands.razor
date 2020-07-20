@@ -4,44 +4,55 @@
 @inject BotCommandManager commands
 @inject CommandTypeManager commandTypes
 
-<h1>Current Bot Channels</h1>
+<h1>Current Bot Commands</h1>
 
 <div style="display:table">
     @foreach (var cmdInfo in commands.Commands)
     {
         <div style="display:table-row; padding:15px">
-            <div>CMD: @cmdInfo.Key</div><div>TYPE: @cmdInfo.Value.Name</div>
-            @switch (cmdInfo.Value)
-            {
-                case EchoCommand ec:
-                    <EchoCommandEdit />
-                    break;
-                case LGResponseCommand lgc:
-                    <LGResponseCommandEdit command="@((LGResponseCommand)cmdInfo.Value)" />
-                    break;
-                case BotCommandDecorator lgc:
-                    <DecoratedCommandEdit command="@lgc" />
-                    break;
-                default:
-                    <UnknownCommandEdit command="@cmdInfo.Value" />
-                    break;
-            }
+            <div><b>!@cmdInfo.Key</b> (@cmdInfo.Value.Name)</div>
+            <div style="margin-bottom:20px;">
+                @switch (cmdInfo.Value)
+                {
+                    case EchoCommand cmd:
+                        <EchoCommandEdit />
+                        break;
+                    case LGResponseCommand cmd:
+                        <LGResponseCommandEdit command="@cmd" />
+                        break;
+                    case BotCommandDecorator lgc:
+                        <DecoratedCommandEdit command="@lgc" />
+                        break;
+                    case TextResponseCommand tr:
+                        <TextResponseEdit command="@tr" />
+                        break;
+                    case JoinCommand tr:
+                    case LeaveCommand lc:
+                        <NullCommandEdit command="@cmdInfo.Value" />
+                        break;
+                    default:
+                        <UnknownCommandEdit command="@cmdInfo.Value" />
+                        break;
+                }
+            </div>
         </div>
     }
 </div>
 <button @onclick="Save">Save</button>
 <hr />
-<label for="NewCommandText">!Command</label>
-<input id="NewCommandText" @bind="NewCommandText" />
-
-<label for="newCommandType">Command Type</label>
-<select id="newCommandType" @bind="NewCommandType">
-    @foreach (var cmdType in commandTypes.DefaultCommands)
-    {
-        <option>@cmdType.Key</option>
-    }
-</select>
-<button @onclick="AddNewCommand">Add</button>
+<div>
+    <h1>Add New Command</h1>
+    <label for="NewCommandText">!Command</label>
+    <input id="NewCommandText" @bind="NewCommandText" />
+    <label for="newCommandType">Command Type</label>
+    <select id="newCommandType" @bind="NewCommandType">
+        @foreach (var cmdType in commandTypes.DefaultCommands)
+        {
+            <option>@cmdType.Key</option>
+        }
+    </select>
+    <button @onclick="AddNewCommand">Add</button>
+</div>
 <hr />
 
 @code {

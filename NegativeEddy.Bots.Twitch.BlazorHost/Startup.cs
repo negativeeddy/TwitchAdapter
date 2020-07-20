@@ -75,15 +75,11 @@ namespace NegativeEddy.Bots.Twitch.BlazorHost
                 ("specs", new LGResponseCommand
                 {
                     Template =
-                        @"# response
-                        - Not as good as most streamers
-                        - Wouldn't you like to know?"
+@"# response
+- Not as good as most streamers
+- Wouldn't you like to know?"
                 })
             });
-
-            string tmp = JsonSerializer.Serialize(cmdMgr.Commands.Values.ToArray());
-            File.WriteAllText("commands.json", tmp);
-            return cmdMgr;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
