@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 
@@ -11,22 +12,22 @@ namespace NegativeEddy.Bots.Twitch.SampleBot.Commands
         public IReadOnlyDictionary<string, IBotCommand> Commands =>
             new ReadOnlyDictionary<string, IBotCommand>(_commands);
 
-        public void Add(IBotCommand command)
+        public void Add(string id, IBotCommand command)
         {
-            _commands.Add(command.Command, command);
+            _commands.Add(id, command);
         }
 
-        public void Add(IEnumerable<IBotCommand> commands)
+        public void Add(IEnumerable<(string id, IBotCommand cmd)> commands)
         {
-            foreach (var command in commands)
+            foreach (var (id, cmd) in commands)
             {
-                _commands.Add(command.Command, command);
+                _commands.Add(id, cmd);
             }
         }
 
-        public void Remove(IBotCommand command)
+        public void Remove(string id)
         {
-            _commands.Remove(command.Command);
+            _commands.Remove(id);
         }
     }
 }

@@ -7,7 +7,7 @@ namespace NegativeEddy.Bots.Twitch.SampleBot.Commands
 {
     public class LeaveCommand : IBotCommand
     {
-        public string Command { get; set; } = "leave";
+        public string Name => "leave";
 
         public string Description { get; set; } = "makes the bot join your channel";
 

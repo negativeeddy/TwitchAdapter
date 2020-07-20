@@ -13,9 +13,9 @@ namespace NegativeEddy.Bots.Twitch.SampleBot.Commands
         public BeforeAndAfterCommandDecorator(IBotCommand command) : base(command) { }
         public override async Task ExecuteAsync(ITurnContext context, IList<string> args)
         {
-            await context.SendActivityAsync($"I'm about to do the {Command} command");
-            await Instance.ExecuteAsync(context, args);
-            await context.SendActivityAsync($"I just did the {Command} command");
+            await context.SendActivityAsync($"I'm about to do the {Name} command");
+            await Command.ExecuteAsync(context, args);
+            await context.SendActivityAsync($"I just did the {Name} command");
         }
     }
 }

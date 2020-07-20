@@ -27,7 +27,7 @@ namespace NegativeEddy.Bots.Twitch
             {
                 if (member.Id != turnContext.Activity.Recipient.Id)
                 {
-                    await turnContext.SendActivityAsync($"See ya later @{member.Name}!", cancellationToken: cancellationToken);
+                    //await turnContext.SendActivityAsync($"See ya later @{member.Name}!", cancellationToken: cancellationToken);
                 }
             }
         }
@@ -38,7 +38,11 @@ namespace NegativeEddy.Bots.Twitch
             {
                 if (member.Id != turnContext.Activity.Recipient.Id)
                 {
-                    await turnContext.SendActivityAsync($"Hi there - @{member.Name}. Welcome to the channel", cancellationToken: cancellationToken);
+                    //await turnContext.SendActivityAsync($"Hi there - @{member.Name}. Welcome to the channel", cancellationToken: cancellationToken);
+                }
+                else
+                {
+                    await turnContext.SendActivityAsync("I have arrived!");
                 }
             }
         }

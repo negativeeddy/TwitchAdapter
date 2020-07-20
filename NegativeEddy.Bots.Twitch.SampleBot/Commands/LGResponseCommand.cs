@@ -22,9 +22,9 @@ namespace NegativeEddy.Bots.Twitch.SampleBot.Commands
     {
         public const string ResponseTemplateId = "response";
 
-        public string Template { get; set; } 
+        public string Template { get; set; }
 
-        public string Command { get; set; }
+        public string Name => "lg response";
 
         public string Description { get; set; } = string.Empty;
 

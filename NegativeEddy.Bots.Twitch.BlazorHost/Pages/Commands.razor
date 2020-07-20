@@ -1,0 +1,68 @@
+﻿@page "/commands"
+@using NegativeEddy.Bots.Twitch.SampleBot.Commands
+@using NegativeEddy.Bots.Twitch.BlazorHost.Model
+@inject BotCommandManager commands
+@inject CommandTypeManager commandTypes
+
+<h1>Current Bot Channels</h1>
+
+<div style="display:table">
+    @foreach (var cmdInfo in commands.Commands)
+    {
+        <div style="display:table-row; padding:15px">
+            <div>CMD: @cmdInfo.Key</div><div>TYPE: @cmdInfo.Value.Name</div>
+            @switch (cmdInfo.Value)
+            {
+                case EchoCommand ec:
+                    <EchoCommandEdit />
+                    break;
+                case LGResponseCommand lgc:
+                    <LGResponseCommandEdit command="@((LGResponseCommand)cmdInfo.Value)" />
+                    break;
+                case BotCommandDecorator lgc:
+                    <DecoratedCommandEdit command="@lgc" />
+                    break;
+                default:
+                    <UnknownCommandEdit command="@cmdInfo.Value" />
+                    break;
+            }
+        </div>
+    }
+</div>
+<button @onclick="Save">Save</button>
+<hr />
+<label for="NewCommandText">!Command</label>
+<input id="NewCommandText" @bind="NewCommandText" />
+
+<label for="newCommandType">Command Type</label>
+<select id="newCommandType" @bind="NewCommandType">
+    @foreach (var cmdType in commandTypes.DefaultCommands)
+    {
+        <option>@cmdType.Key</option>
+    }
+</select>
+<button @onclick="AddNewCommand">Add</button>
+<hr />
+
+@code {
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        NewCommandType = commandTypes.DefaultCommands.First().Key;
+    }
+
+    protected void Save()
+    {
+
+    }
+
+    private string NewCommandType { get; set; }
+    private string NewCommandText { get; set; }
+
+    protected void AddNewCommand()
+    {
+        var newCmd = commandTypes.Create(NewCommandType);
+
+        commands.Add(NewCommandText, newCmd);
+    }
+}

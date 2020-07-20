@@ -7,7 +7,7 @@ namespace NegativeEddy.Bots.Twitch.SampleBot.Commands
 {
     public class JoinCommand : IBotCommand
     {
-        public string Command { get; set; } = "join";
+        public string Name => "join";
 
         public string Description { get; set; } = "makes the bot join your channel";
 

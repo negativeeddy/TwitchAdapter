@@ -5,8 +5,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NegativeEddy.Bots.Twitch.AspNetCore;
+using NegativeEddy.Bots.Twitch.BlazorHost.Model;
 using NegativeEddy.Bots.Twitch.SampleBot.Commands;
 using System;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
 
 namespace NegativeEddy.Bots.Twitch.BlazorHost
 {
@@ -33,7 +37,7 @@ namespace NegativeEddy.Bots.Twitch.BlazorHost
             services.AddSingleton<UserState>();
             BotCommandManager cmdMgr = SetUpCommands();
             services.AddSingleton<BotCommandManager>(cmdMgr);
-
+            services.AddSingleton<CommandTypeManager>();
             services.AddTransient<IBot, SampleTwitchBot>();
 
             var twitchSettings = new TwitchAdapterSettings();
@@ -45,36 +49,40 @@ namespace NegativeEddy.Bots.Twitch.BlazorHost
         private static BotCommandManager SetUpCommands()
         {
             var cmdMgr = new BotCommandManager();
-            cmdMgr.Add(new IBotCommand[]
+            cmdMgr.Add(new (string, IBotCommand)[]
             {
-                new BeforeAndAfterCommandDecorator( new EchoCommand()),
-                new CoolDownOption( new EchoCommand() { Command="slowecho" })
+                ("echo",
+                new BeforeAndAfterCommandDecorator( new EchoCommand())),
+                ("slowecho",
+                new CoolDownDecorator( new EchoCommand() )
                 {
                     Cooldown =  TimeSpan.FromSeconds(10),
                     CooldownMessage ="Whoa there slick! too fast for me!"
-                },
+                }),
+                ("quote",
                 new LGResponseCommand
                 {
-                    Command = "quote",
                     Template =
-                        @"# response
-                        - May the Force be with you
-                        - There's no place like home
-                        - I'll be back
-                        - Houston, we have a problem"
-                },
-                new LGResponseCommand
+@"# response
+- May the Force be with you
+- There's no place like home
+- I'll be back
+- Houston, we have a problem"
+                }),
+                ("help", new TextResponseCommand { Response = "sorry I can't help you" }),
+                ("join", new JoinCommand()),
+                ("leave", new LeaveCommand()),
+                ("specs", new LGResponseCommand
                 {
-                    Command = "specs",
                     Template =
                         @"# response
                         - Not as good as most streamers
                         - Wouldn't you like to know?"
-                },
-                new TextResponseCommand("help", "", "sorry I can't help you"),
-                new JoinCommand(),
-                new LeaveCommand(),
+                })
             });
+
+            string tmp = JsonSerializer.Serialize(cmdMgr.Commands.Values.ToArray());
+            File.WriteAllText("commands.json", tmp);
             return cmdMgr;
         }
 

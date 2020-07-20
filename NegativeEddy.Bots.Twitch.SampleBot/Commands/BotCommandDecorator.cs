@@ -8,14 +8,14 @@ namespace NegativeEddy.Bots.Twitch.SampleBot.Commands
 {
     public abstract class BotCommandDecorator : IBotCommand
     {
-        protected IBotCommand Instance { get; }
+        public IBotCommand Command { get; }
         protected BotCommandDecorator(IBotCommand command)
         {
-            Instance = command;
+            Command = command;
         }
 
-        public string Command { get => Instance.Command; set => Instance.Command = value; }
-        public string Description { get => Instance.Description; set => Instance.Description = value; }
+        public string Name => Command.Name;
+        public string Description => Command.Description;
         public abstract Task ExecuteAsync(ITurnContext context, IList<string> args);
     }
 }

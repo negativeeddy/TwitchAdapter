@@ -11,9 +11,9 @@ namespace NegativeEddy.Bots.Twitch.SampleBot.Commands
     /// An example BotCommandDecorator which sends a message before and after executing
     /// the decorated command
     /// </summary>
-    public class CoolDownOption : BotCommandDecorator
+    public class CoolDownDecorator : BotCommandDecorator
     {
-        public CoolDownOption(IBotCommand command) : base(command)
+        public CoolDownDecorator(IBotCommand command) : base(command)
         {
         }
         public TimeSpan Cooldown { get; set; } = TimeSpan.FromSeconds(10);
@@ -30,7 +30,7 @@ namespace NegativeEddy.Bots.Twitch.SampleBot.Commands
                 var time = DateTime.Now + Cooldown;
                 Debug.WriteLine($"adding entry for {currentUser} - {time}");
                 _coolDownExpirations.AddOrUpdate(currentUser, time, (u, d) => time);
-                await Instance.ExecuteAsync(context, args);
+                await Command.ExecuteAsync(context, args);
             }
             else if (!string.IsNullOrWhiteSpace(CooldownMessage))
             {
