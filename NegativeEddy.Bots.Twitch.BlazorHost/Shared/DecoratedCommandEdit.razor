@@ -16,7 +16,7 @@
                     <UnknownCommandDecoratorEdit Decorator="@decorator" />
                     break;
             }
-            <button>Delete</button>
+            <button @onclick="async e => await OnDelete(decorator)">Delete @decorator.DecoratorName</button>
         </div>
         }
     </div>
@@ -44,5 +44,18 @@
             tmp = bcd.Command;
         }
         command = tmp;
+    }
+
+    protected async Task OnDelete(BotCommandDecorator toRemove)
+    {
+        if (Decorator == toRemove)
+        {
+            // need to remove this from the command manager and reinsert it with the 
+            // same key, but without the outer decorator
+        }
+        else
+        {
+            Decorator.Remove(toRemove);
+        }
     }
 }
