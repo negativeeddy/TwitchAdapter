@@ -9,7 +9,7 @@
                 <LGResponseCommandEdit Command="@cmd" />
                 break;
             case BotCommandDecorator decorator:
-                <DecoratedCommandEdit Decorator="@decorator" />
+                <DecoratedCommandEdit Decorator="@decorator" CommandReplaced="@OnCommandReplaced" />
                 break;
             case TextResponseCommand tr:
                 <TextResponseEdit Command="@tr" />
@@ -27,5 +27,14 @@
 
 @code {
     [Parameter]
+    public EventCallback<BotCommandReplacedEventArgs> CommandReplaced { get; set; }
+
+    [Parameter]
     public IBotCommand Command { get; set; }
+
+    protected async Task OnCommandReplaced(BotCommandReplacedEventArgs args)
+    {
+        await CommandReplaced.InvokeAsync(args);
+        StateHasChanged();
+    }
 }

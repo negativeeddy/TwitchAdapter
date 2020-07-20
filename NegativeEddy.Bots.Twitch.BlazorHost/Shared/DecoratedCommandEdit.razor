@@ -3,32 +3,36 @@
     <div>
         @foreach (var decorator in decorators)
         {
-        <div>
-            @switch (decorator)
-            {
-                case CoolDownDecorator d:
-                    <CooldownDecoratorEditor Decorator="@d" />
-                    break;
-                case BeforeAndAfterCommandDecorator d:
-                    <NoConfigCommandDecoratorEdit Decorator="@d"/>
-                    break;
-                default:
-                    <UnknownCommandDecoratorEdit Decorator="@decorator" />
-                    break;
-            }
-            <button @onclick="async e => await OnDelete(decorator)">Delete @decorator.DecoratorName</button>
-        </div>
+            <div>
+                @switch (decorator)
+                {
+                    case CoolDownDecorator d:
+                        <CooldownDecoratorEditor Decorator="@d" />
+                        break;
+                    case BeforeAndAfterCommandDecorator d:
+                        <NoConfigCommandDecoratorEdit Decorator="@d" />
+                        break;
+                    default:
+                        <UnknownCommandDecoratorEdit Decorator="@decorator" />
+                        break;
+                }
+                <button @onclick="async e => await OnDelete(decorator)">Delete @decorator.DecoratorName</button>
+            </div>
         }
     </div>
     <div>
-    <GenericCommandEditor Command="@command"/>
+        <GenericCommandEditor Command="@command" />
     </div>
 </div>
 
 
 @code {
+
     [Parameter]
     public BotCommandDecorator Decorator { get; set; }
+
+    [Parameter]
+    public EventCallback<BotCommandReplacedEventArgs> CommandReplaced { get; set; }
 
     List<BotCommandDecorator> decorators = new List<BotCommandDecorator>();
     IBotCommand command;
@@ -50,12 +54,15 @@
     {
         if (Decorator == toRemove)
         {
-            // need to remove this from the command manager and reinsert it with the 
-            // same key, but without the outer decorator
+            // need to remove the outer decorator, but this is referenced outside the control. Notify the host
+            // that they need to replace it with this new command
+            await CommandReplaced.InvokeAsync(new BotCommandReplacedEventArgs { oldCmd = Decorator, newCmd = Decorator.Command });
+            StateHasChanged();
         }
         else
         {
             Decorator.Remove(toRemove);
+            StateHasChanged();
         }
     }
 }
