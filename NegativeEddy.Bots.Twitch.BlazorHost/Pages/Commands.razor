@@ -3,6 +3,7 @@
 @using NegativeEddy.Bots.Twitch.BlazorHost.Model
 @inject BotCommandManager commands
 @inject CommandTypeManager commandTypes
+@inject IJSRuntime JsRuntime
 
 <h1>Current Bot Commands</h1>
 
@@ -10,9 +11,11 @@
     @foreach (var cmdInfo in commands.Commands)
     {
         <div style="display:table-row; padding:15px">
-            <div><b>!@cmdInfo.Key</b> (@cmdInfo.Value.Name)</div>
+            <div><span style="font-weight:bolder; font-size:larger">!@cmdInfo.Key</span> (@cmdInfo.Value.Name)</div>
+            <div><button @onclick="async e => await OnDelete(cmdInfo.Key)">Delete command</button><button>Add Option</button></div>
+
             <div style="margin-bottom:20px;">
-                <GenericCommandEditor Command="@cmdInfo.Value"/>
+                <GenericCommandEditor Command="@cmdInfo.Value" />
             </div>
         </div>
     }
@@ -54,5 +57,14 @@
         var newCmd = commandTypes.Create(NewCommandType);
 
         commands.Add(NewCommandText, newCmd);
+    }
+
+    protected async Task OnDelete(string commandId)
+    {
+        bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure?");
+        if (confirmed)
+        {
+            commands.Remove(commandId);
+        }
     }
 }
