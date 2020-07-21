@@ -12,13 +12,16 @@
     {
         <div style="display:table-row;">
             <div style="display:table-cell;padding:25px;">
-                <div><span style="font-weight:bolder; font-size:larger">!@cmdInfo.Key</span> (@cmdInfo.Value.Name)</div>
+                <div>
+                    <span style="font-weight:bolder; font-size:larger">!@cmdInfo.Key</span> (@cmdInfo.Value.Name)                 
+                    <button class="linkbutton" @onclick="async e => await OnDelete(cmdInfo.Key)">
+                    <span class="oi oi-trash" aria-hidden="true"></span></button>
+                </div>
                 <div><button>Add Option</button></div>
 
                 <div>
                     <GenericCommandEditor Command="@cmdInfo.Value" CommandReplaced=@OnCommandReplaced />
                 </div>
-                <button  @onclick="async e => await OnDelete(cmdInfo.Key)">Delete !@cmdInfo.Key</button>
             </div>
         </div>
     }

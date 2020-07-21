@@ -3,6 +3,12 @@
     <div>
         @foreach (var decorator in decorators)
         {
+        <div>
+            <span style="font-weight:bolder;">@decorator.DecoratorName</span>
+            <button class="linkbutton" @onclick="async e => await OnDelete(decorator)">
+                <span class="oi oi-trash" aria-hidden="true"></span>
+            </button>
+        </div>
             <div>
                 @switch (decorator)
                 {
@@ -16,7 +22,6 @@
                         <UnknownCommandDecoratorEdit Decorator="@decorator" />
                         break;
                 }
-                <button @onclick="async e => await OnDelete(decorator)">Delete @decorator.DecoratorName</button>
             </div>
         }
     </div>
