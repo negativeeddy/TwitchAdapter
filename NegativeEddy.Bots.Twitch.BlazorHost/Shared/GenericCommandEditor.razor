@@ -35,6 +35,5 @@
     protected async Task OnCommandReplaced(BotCommandReplacedEventArgs args)
     {
         await CommandReplaced.InvokeAsync(args);
-        StateHasChanged();
     }
 }

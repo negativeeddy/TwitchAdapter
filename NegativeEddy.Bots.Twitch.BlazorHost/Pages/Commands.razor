@@ -49,8 +49,6 @@
         // replace it with the new one
         commands.Remove(key);
         commands.Add(key, args.newCmd);
-
-        StateHasChanged();
     }
 
     protected override void OnInitialized()

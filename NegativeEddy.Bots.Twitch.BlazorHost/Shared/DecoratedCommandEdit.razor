@@ -34,14 +34,19 @@
     [Parameter]
     public EventCallback<BotCommandReplacedEventArgs> CommandReplaced { get; set; }
 
-    List<BotCommandDecorator> decorators = new List<BotCommandDecorator>();
+    List<BotCommandDecorator> decorators { get; set; }
     IBotCommand command;
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
+        LoadDecorators();
+    }
 
+    protected void LoadDecorators()
+    {
         IBotCommand tmp = Decorator;
+        decorators = new List<BotCommandDecorator>();
         while (tmp is BotCommandDecorator bcd)
         {
             decorators.Add(bcd);
@@ -57,12 +62,11 @@
             // need to remove the outer decorator, but this is referenced outside the control. Notify the host
             // that they need to replace it with this new command
             await CommandReplaced.InvokeAsync(new BotCommandReplacedEventArgs { oldCmd = Decorator, newCmd = Decorator.Command });
-            StateHasChanged();
         }
         else
         {
             Decorator.Remove(toRemove);
-            StateHasChanged();
+            LoadDecorators();
         }
     }
 }
