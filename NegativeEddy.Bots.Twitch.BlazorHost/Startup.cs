@@ -11,6 +11,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace NegativeEddy.Bots.Twitch.BlazorHost
 {
@@ -49,41 +50,8 @@ namespace NegativeEddy.Bots.Twitch.BlazorHost
         private static BotCommandManager SetUpCommands()
         {
             var cmdMgr = new BotCommandManager();
-            cmdMgr.Add(new (string, IBotCommand)[]
-            {
-                ("echo",
-                new BeforeAndAfterCommandDecorator( 
-                    new EchoCommand())),
-                ("slowecho",
-                new CoolDownDecorator( 
-                    new BeforeAndAfterCommandDecorator(
-                    new EchoCommand() ))
-                {
-                    Cooldown =  TimeSpan.FromSeconds(10),
-                    CooldownMessage ="Whoa there slick! too fast for me!"
-                }),
-                ("quote",
-                new LGResponseCommand
-                {
-                    Template =
-@"# response
-- May the Force be with you
-- There's no place like home
-- I'll be back
-- Houston, we have a problem"
-                }),
-                ("help", new TextResponseCommand { Response = "sorry I can't help you" }),
-                ("join", new JoinCommand()),
-                ("leave", new LeaveCommand()),
-                ("specs", new LGResponseCommand
-                {
-                    Template =
-@"# response
-- Not as good as most streamers
-- Wouldn't you like to know?"
-                })
-            });
-
+            using var stream = System.IO.File.OpenRead("./Commands.json");
+            cmdMgr.Load(stream).Wait();
             return cmdMgr;
         }
 

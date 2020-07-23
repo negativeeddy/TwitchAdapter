@@ -1,5 +1,6 @@
 ﻿using AdaptiveExpressions;
 using Microsoft.Bot.Builder;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,8 +17,11 @@ namespace NegativeEddy.Bots.Twitch.SampleBot.Commands
             Command = command;
         }
 
+        [JsonIgnore]
         public string Name => Command.Name;
+        [JsonIgnore]
         public string Description => Command.Description;
+        [JsonIgnore]
         public abstract string DecoratorName { get; }
         public IEnumerable<BotCommandDecorator> Decorators()
         {

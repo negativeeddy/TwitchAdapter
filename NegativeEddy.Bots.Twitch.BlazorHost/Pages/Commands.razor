@@ -13,9 +13,10 @@
         <div style="display:table-row;">
             <div style="display:table-cell;padding:25px;">
                 <div>
-                    <span style="font-weight:bolder; font-size:larger">!@cmdInfo.Key</span> (@cmdInfo.Value.Name)                 
+                    <span style="font-weight:bolder; font-size:larger">!@cmdInfo.Key</span> (@cmdInfo.Value.Name)
                     <button class="linkbutton" @onclick="async e => await OnDelete(cmdInfo.Key)">
-                    <span class="oi oi-trash" aria-hidden="true"></span></button>
+                        <span class="oi oi-trash" aria-hidden="true"></span>
+                    </button>
                 </div>
                 <div><button>Add Option</button></div>
 
@@ -27,6 +28,7 @@
     }
 </div>
 <button @onclick="Save">Save</button>
+<button @onclick="Load">Load</button>
 <hr />
 <div>
     <h1>Add New Command</h1>
@@ -60,9 +62,20 @@
         NewCommandType = commandTypes.DefaultCommands.First().Key;
     }
 
-    protected void Save()
-    {
+    private const string commandSaveFile = "./Commands.json";
 
+    protected async Task Save()
+    {
+        using var stream = System.IO.File.OpenWrite(commandSaveFile);
+        await commands.Save(stream);
+        stream.SetLength(stream.Position);
+    }
+
+    protected async Task Load()
+    {
+        using var stream = System.IO.File.OpenRead(commandSaveFile);
+        await commands.Load(stream);
+        StateHasChanged();
     }
 
     private string NewCommandType { get; set; }
