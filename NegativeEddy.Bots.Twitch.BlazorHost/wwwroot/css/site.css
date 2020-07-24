@@ -26,6 +26,18 @@ app {
     align-items: center;
 }
 
+.linkbutton {
+    background: none !important;
+    border: none;
+    padding: 0 !important;
+    /*optional*/
+    font-family: arial, sans-serif;
+    /*input has OS specific font-family*/
+    color: #069;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
 .main {
     flex: 1;
 }
@@ -115,6 +127,10 @@ app {
 
 .validation-message {
     color: red;
+}
+
+.commandeditor {
+    background-color: lavender;
 }
 
 #blazor-error-ui {

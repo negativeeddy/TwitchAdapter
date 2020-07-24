@@ -1,0 +1,10 @@
+﻿@using NegativeEddy.Bots.Twitch.SampleBot.Commands
+<div class="commandeditor" style="color:red">
+    <span style="font-weight:bold">@Decorator.DecoratorName</span>: Sorry, cannot yet edit "@Decorator.DecoratorName" commands
+</div>
+
+
+@code {
+    [Parameter]
+    public BotCommandDecorator Decorator { get; set; }
+}

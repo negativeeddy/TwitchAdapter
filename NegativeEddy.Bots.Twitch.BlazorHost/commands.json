@@ -1,0 +1,52 @@
+{
+  "$type": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[NegativeEddy.Bots.Twitch.SampleBot.Commands.IBotCommand, NegativeEddy.Bots.Twitch.SampleBot]], System.Private.CoreLib",
+  "echo": {
+    "$type": "NegativeEddy.Bots.Twitch.SampleBot.Commands.BeforeAndAfterCommandDecorator, NegativeEddy.Bots.Twitch.SampleBot",
+    "Command": {
+      "$type": "NegativeEddy.Bots.Twitch.SampleBot.Commands.EchoCommand, NegativeEddy.Bots.Twitch.SampleBot",
+      "Name": "echo",
+      "Description": "Echos the input back to the user"
+    }
+  },
+  "slowecho": {
+    "$type": "NegativeEddy.Bots.Twitch.SampleBot.Commands.CoolDownDecorator, NegativeEddy.Bots.Twitch.SampleBot",
+    "Cooldown": "00:00:10",
+    "CooldownMessage": "Whoa there slick! too fast for me!",
+    "Command": {
+      "$type": "NegativeEddy.Bots.Twitch.SampleBot.Commands.BeforeAndAfterCommandDecorator, NegativeEddy.Bots.Twitch.SampleBot",
+      "Command": {
+        "$type": "NegativeEddy.Bots.Twitch.SampleBot.Commands.EchoCommand, NegativeEddy.Bots.Twitch.SampleBot",
+        "Name": "echo",
+        "Description": "Echos the input back to the user"
+      }
+    }
+  },
+  "quote": {
+    "$type": "NegativeEddy.Bots.Twitch.SampleBot.Commands.LGResponseCommand, NegativeEddy.Bots.Twitch.SampleBot",
+    "Template": "# response\r\n- May the Force be with you\r\n- There's no place like home\r\n- I'll be back\r\n- Houston, we have a problem",
+    "Name": "lg response",
+    "Description": ""
+  },
+  "help": {
+    "$type": "NegativeEddy.Bots.Twitch.SampleBot.Commands.TextResponseCommand, NegativeEddy.Bots.Twitch.SampleBot",
+    "Name": "text response",
+    "Description": "replies to the user with a simple text response",
+    "Response": "sorry I can't help you"
+  },
+  "join": {
+    "$type": "NegativeEddy.Bots.Twitch.SampleBot.Commands.JoinCommand, NegativeEddy.Bots.Twitch.SampleBot",
+    "Name": "join",
+    "Description": "makes the bot join your channel"
+  },
+  "leave": {
+    "$type": "NegativeEddy.Bots.Twitch.SampleBot.Commands.LeaveCommand, NegativeEddy.Bots.Twitch.SampleBot",
+    "Name": "leave",
+    "Description": "makes the bot join your channel"
+  },
+  "specs": {
+    "$type": "NegativeEddy.Bots.Twitch.SampleBot.Commands.LGResponseCommand, NegativeEddy.Bots.Twitch.SampleBot",
+    "Template": "# response\r\n- Not as good as most streamers\r\n- Wouldn't you like to know?",
+    "Name": "lg response",
+    "Description": ""
+  }
+}

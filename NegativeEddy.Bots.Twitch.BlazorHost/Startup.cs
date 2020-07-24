@@ -5,6 +5,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NegativeEddy.Bots.Twitch.AspNetCore;
+using NegativeEddy.Bots.Twitch.BlazorHost.Model;
+using NegativeEddy.Bots.Twitch.SampleBot.Commands;
+using System;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace NegativeEddy.Bots.Twitch.BlazorHost
 {
@@ -29,13 +36,23 @@ namespace NegativeEddy.Bots.Twitch.BlazorHost
 
             // Create the User state.
             services.AddSingleton<UserState>();
-
+            BotCommandManager cmdMgr = SetUpCommands();
+            services.AddSingleton<BotCommandManager>(cmdMgr);
+            services.AddSingleton<CommandTypeManager>();
             services.AddTransient<IBot, SampleTwitchBot>();
 
             var twitchSettings = new TwitchAdapterSettings();
             Configuration.GetSection("twitchBot").Bind(twitchSettings);
 
             services.AddTwitchBotAdapter(twitchSettings);
+        }
+
+        private static BotCommandManager SetUpCommands()
+        {
+            var cmdMgr = new BotCommandManager();
+            using var stream = System.IO.File.OpenRead("./Commands.json");
+            cmdMgr.Load(stream).Wait();
+            return cmdMgr;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,0 +1,99 @@
+﻿@page "/commands"
+@using NegativeEddy.Bots.Twitch.SampleBot.Commands
+@using NegativeEddy.Bots.Twitch.BlazorHost.Model
+@inject BotCommandManager commands
+@inject CommandTypeManager commandTypes
+@inject IJSRuntime JsRuntime
+
+<h1>Current Bot Commands</h1>
+
+<div style="display:table">
+    @foreach (var cmdInfo in commands.Commands)
+    {
+        <div style="display:table-row;">
+            <div style="display:table-cell;padding:25px;">
+                <div>
+                    <span style="font-weight:bolder; font-size:larger">!@cmdInfo.Key</span> (@cmdInfo.Value.Name)
+                    <button class="linkbutton" @onclick="async e => await OnDelete(cmdInfo.Key)">
+                        <span class="oi oi-trash" aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div><button>Add Option</button></div>
+
+                <div>
+                    <GenericCommandEditor Command="@cmdInfo.Value" CommandReplaced=@OnCommandReplaced />
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<button @onclick="Save">Save</button>
+<button @onclick="Load">Load</button>
+<hr />
+<div>
+    <h1>Add New Command</h1>
+    <label for="NewCommandText">!Command</label>
+    <input id="NewCommandText" @bind="NewCommandText" />
+    <label for="newCommandType">Command Type</label>
+    <select id="newCommandType" @bind="NewCommandType">
+        @foreach (var cmdType in commandTypes.DefaultCommands)
+        {
+            <option>@cmdType.Key</option>
+        }
+    </select>
+    <button @onclick="AddNewCommand">Add</button>
+</div>
+<hr />
+
+@code {
+    protected void OnCommandReplaced(BotCommandReplacedEventArgs args)
+    {
+        // find the old command instance
+        string key = commands.Commands.First(x => x.Value == args.oldCmd).Key;
+
+        // replace it with the new one
+        commands.Remove(key);
+        commands.Add(key, args.newCmd);
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        NewCommandType = commandTypes.DefaultCommands.First().Key;
+    }
+
+    private const string commandSaveFile = "./Commands.json";
+
+    protected async Task Save()
+    {
+        using var stream = System.IO.File.OpenWrite(commandSaveFile);
+        await commands.Save(stream);
+        stream.SetLength(stream.Position);
+    }
+
+    protected async Task Load()
+    {
+        using var stream = System.IO.File.OpenRead(commandSaveFile);
+        await commands.Load(stream);
+        StateHasChanged();
+    }
+
+    private string NewCommandType { get; set; }
+    private string NewCommandText { get; set; }
+
+    protected void AddNewCommand()
+    {
+        var newCmd = commandTypes.Create(NewCommandType);
+
+        commands.Add(NewCommandText, newCmd);
+    }
+
+    protected async Task OnDelete(string commandId)
+    {
+        bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure?");
+        if (confirmed)
+        {
+            commands.Remove(commandId);
+        }
+    }
+}

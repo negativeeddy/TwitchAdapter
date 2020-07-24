@@ -1,0 +1,11 @@
+﻿@using NegativeEddy.Bots.Twitch.SampleBot.Commands
+<div class="commandeditor">
+    <label for="template">Response</label>
+    <textarea id="template" @bind="Command.Response" rows="1" cols="50" />
+</div>
+
+
+@code {
+    [Parameter]
+    public TextResponseCommand Command { get; set; }
+}

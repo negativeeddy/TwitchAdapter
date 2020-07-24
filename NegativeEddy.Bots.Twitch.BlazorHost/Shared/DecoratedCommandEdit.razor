@@ -1,0 +1,77 @@
+﻿@using NegativeEddy.Bots.Twitch.SampleBot.Commands
+<div class="commandeditor">
+    <div>
+        @foreach (var decorator in decorators)
+        {
+        <div>
+            <span style="font-weight:bolder;">@decorator.DecoratorName</span>
+            <button class="linkbutton" @onclick="async e => await OnDelete(decorator)">
+                <span class="oi oi-trash" aria-hidden="true"></span>
+            </button>
+        </div>
+            <div>
+                @switch (decorator)
+                {
+                    case CoolDownDecorator d:
+                        <CooldownDecoratorEditor Decorator="@d" />
+                        break;
+                    case BeforeAndAfterCommandDecorator d:
+                        <NoConfigCommandDecoratorEdit Decorator="@d" />
+                        break;
+                    default:
+                        <UnknownCommandDecoratorEdit Decorator="@decorator" />
+                        break;
+                }
+            </div>
+        }
+    </div>
+    <div>
+        <GenericCommandEditor Command="@command" />
+    </div>
+</div>
+
+
+@code {
+
+    [Parameter]
+    public BotCommandDecorator Decorator { get; set; }
+
+    [Parameter]
+    public EventCallback<BotCommandReplacedEventArgs> CommandReplaced { get; set; }
+
+    List<BotCommandDecorator> decorators { get; set; }
+    IBotCommand command;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        LoadDecorators();
+    }
+
+    protected void LoadDecorators()
+    {
+        IBotCommand tmp = Decorator;
+        decorators = new List<BotCommandDecorator>();
+        while (tmp is BotCommandDecorator bcd)
+        {
+            decorators.Add(bcd);
+            tmp = bcd.Command;
+        }
+        command = tmp;
+    }
+
+    protected async Task OnDelete(BotCommandDecorator toRemove)
+    {
+        if (Decorator == toRemove)
+        {
+            // need to remove the outer decorator, but this is referenced outside the control. Notify the host
+            // that they need to replace it with this new command
+            await CommandReplaced.InvokeAsync(new BotCommandReplacedEventArgs { oldCmd = Decorator, newCmd = Decorator.Command });
+        }
+        else
+        {
+            Decorator.Remove(toRemove);
+            LoadDecorators();
+        }
+    }
+}
