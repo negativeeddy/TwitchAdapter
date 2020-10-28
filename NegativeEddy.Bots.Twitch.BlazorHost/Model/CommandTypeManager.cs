@@ -29,7 +29,8 @@ namespace NegativeEddy.Bots.Twitch.BlazorHost.Model
         public IBotCommand Create(string name, string[]? options = null)
         {
             Type t = DefaultCommands[name] ?? throw new ArgumentException(nameof(name));
-            return (IBotCommand)t.Assembly.CreateInstance(t.FullName);
+            var instance = t.Assembly.CreateInstance(t.FullName!) ?? throw new ArgumentException($"command {name} requires type {t.FullName}. no valid type found for '{t.FullName}'"); 
+            return (IBotCommand)instance;
         }
     }
 }

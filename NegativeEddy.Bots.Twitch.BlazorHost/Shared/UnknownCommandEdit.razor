@@ -1,10 +1,10 @@
 ﻿@using NegativeEddy.Bots.Twitch.SampleBot.Commands
 <div class="commandeditor">
-    Sorry, cannot yet edit "@Command.Name" commands
+    Sorry, cannot yet edit "@Command?.Name" commands
 </div>
 
 
 @code {
     [Parameter]
-    public IBotCommand Command { get; set; }
+    public IBotCommand? Command { get; set; }
 }

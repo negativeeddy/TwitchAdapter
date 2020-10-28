@@ -30,7 +30,7 @@
     public EventCallback<BotCommandReplacedEventArgs> CommandReplaced { get; set; }
 
     [Parameter]
-    public IBotCommand Command { get; set; }
+    public IBotCommand? Command { get; set; }
 
     protected async Task OnCommandReplaced(BotCommandReplacedEventArgs args)
     {
