@@ -18,7 +18,7 @@
                         <span class="oi oi-trash" aria-hidden="true"></span>
                     </button>
                 </div>
-                <div><button>Add Option</button></div>
+                <div><button @onclick="AddOption">Add Option</button></div>
 
                 <div>
                     <GenericCommandEditor Command="@cmdInfo.Value" CommandReplaced=@OnCommandReplaced />
@@ -76,6 +76,11 @@
         using var stream = System.IO.File.OpenRead(commandSaveFile);
         await commands.Load(stream);
         StateHasChanged();
+    }
+
+    protected async Task AddOption()
+    {
+        await JsRuntime.InvokeAsync<bool>("confirm", "Not implemented");
     }
 
     private string NewCommandType { get; set; } = string.Empty;
