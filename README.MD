@@ -10,10 +10,11 @@ All Twitch integration is achieved through the [Twitch IRC interface](https://de
 
 **NegativeEddy.Bots.Twitch.AspNetHost** - an ASP.NET Core sample which hosts the bot as a background service
 
-**NegativeEddy.Bots.Twitch.BlazorHost** - an ASP.NET Core sample which hosts the bot as a background service along side a server side Blazor app. The Blazor app has a simple UI that allows some configuration of the TwitchAdapter. This project also has a more realistic and flexible bot implementation.
+**NegativeEddy.Bots.Twitch.BlazorHost** - an ASP.NET Core sample which hosts the bot as a background service along side a server side Blazor app. The Blazor app has a simple UI that allows some configuration of the TwitchAdapter. This project also uses a more realistic and flexible bot implementation from defined in [NegativeEddy.Bots.Twitch.SampleBot](NegativeEddy.Bots.Twitch.SampleBot).
 
 **NegativeEddy.Bots.Twitch.ConsoleHost** - a .NET Core Console sample which hosts the bot. The console accepts a few commands to configure the TwitchAdapter
 
+**NegativeEddy.Bots.Twitch.SampleBot** - a more realistic sample bot implementation with '!' style commands. This is the bot that is hosted by the BlazorHost sample.
 
 # Requirements
 To register a bot with Twitch
