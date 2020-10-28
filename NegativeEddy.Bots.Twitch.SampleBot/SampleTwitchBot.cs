@@ -99,7 +99,7 @@ namespace NegativeEddy.Bots.Twitch
 
         private async Task OnCommand(ITurnContext<IEventActivity> turnContext)
         {
-            (string command, List<string> args) = (ValueTuple<string, List<string>>)turnContext.Activity.Value;
+            (string command, List<string> args) = ((string, List<string>))turnContext.Activity.Value;
             if (_commands.TryGetValue(command, out IBotCommand botCommand))
             {
                 await botCommand.ExecuteAsync(turnContext, args);
