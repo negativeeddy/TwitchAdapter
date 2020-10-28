@@ -18,6 +18,9 @@
                     case BeforeAndAfterCommandDecorator d:
                         <NoConfigCommandDecoratorEdit Decorator="@d" />
                         break;
+                    case CommandRoleRequirement d:
+                        <CommandRoleRequirementEdit Decorator="@d" />
+                        break;
                     default:
                         <UnknownCommandDecoratorEdit Decorator="@decorator" />
                         break;

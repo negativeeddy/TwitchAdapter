@@ -147,11 +147,16 @@ namespace NegativeEddy.Bots.Twitch
             _logger.LogInformation("received chat message in channel {channel}", message.Channel);
             var activity = CreateBaseActivity(message.Channel);
             activity.Text = message.Message;
-            activity.From = new ChannelAccount(id: message.UserId, name: message.Username);
+            activity.From = ChannelAccountFromTwitchMessage(message);
             activity.Type = ActivityTypes.Message;
             activity.ChannelData = message;
 
             await ProcessActivityAsync(activity);
+        }
+
+        private static ChannelAccount ChannelAccountFromTwitchMessage(TwitchLibMessage message)
+        {
+            return new ChannelAccount(id: message.UserId, name: message.Username, role: message.UserType.ToString());
         }
 
         private async Task ProcessChatCommand(ChatCommand command)
@@ -159,7 +164,7 @@ namespace NegativeEddy.Bots.Twitch
             var message = command.ChatMessage; 
             _logger.LogInformation("received chat command in channel {channel}", message.Channel);
             var activity = CreateBaseActivity(message.Channel);
-            activity.From = new ChannelAccount(id: message.UserId, name: message.Username);
+            activity.From = ChannelAccountFromTwitchMessage(message);
             activity.Type = ActivityTypes.Event;
             activity.Name = TwitchEvents.Command;
             activity.Value = (command.CommandText, command.ArgumentsAsList);

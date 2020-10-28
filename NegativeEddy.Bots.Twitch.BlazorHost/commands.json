@@ -1,4 +1,4 @@
-{
+﻿{
   "$type": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[NegativeEddy.Bots.Twitch.SampleBot.Commands.IBotCommand, NegativeEddy.Bots.Twitch.SampleBot]], System.Private.CoreLib",
   "echo": {
     "$type": "NegativeEddy.Bots.Twitch.SampleBot.Commands.BeforeAndAfterCommandDecorator, NegativeEddy.Bots.Twitch.SampleBot",
@@ -44,9 +44,14 @@
     "Description": "makes the bot join your channel"
   },
   "specs": {
-    "$type": "NegativeEddy.Bots.Twitch.SampleBot.Commands.LGResponseCommand, NegativeEddy.Bots.Twitch.SampleBot",
-    "Template": "# response\r\n- Not as good as most streamers\r\n- Wouldn't you like to know?",
-    "Name": "lg response",
-    "Description": ""
+    "$type": "NegativeEddy.Bots.Twitch.SampleBot.Commands.CommandRoleRequirement, NegativeEddy.Bots.Twitch.SampleBot",
+    "Role": "Broadcaster",
+    "CooldownMessage": null,
+    "Command": {
+      "$type": "NegativeEddy.Bots.Twitch.SampleBot.Commands.LGResponseCommand, NegativeEddy.Bots.Twitch.SampleBot",
+      "Template": "# response\r\n- Not as good as most streamers\r\n- Wouldn't you like to know?",
+      "Name": "lg response",
+      "Description": ""
+    }
   }
 }

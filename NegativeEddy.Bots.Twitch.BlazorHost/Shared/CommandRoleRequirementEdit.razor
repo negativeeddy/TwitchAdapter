@@ -1,0 +1,17 @@
+﻿@using NegativeEddy.Bots.Twitch.SampleBot.Commands
+@using NegativeEddy.Bots.Twitch.BlazorHost.Shared
+<div class="commandeditor">
+    <label for="template"><span style="font-weight:bold">Required role </span></label>
+
+    <select type="text" id="template" @bind="Decorator.Role">
+        @foreach (var value in Enum.GetNames<TwitchLib.Client.Enums.UserType>())
+        {
+            <option>@value</option>
+        }
+    </select>
+</div>
+
+@code {
+    [Parameter]
+    public CommandRoleRequirement? Decorator { get; set; } = new CommandRoleRequirement(new EchoCommand());
+}
